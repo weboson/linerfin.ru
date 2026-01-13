@@ -1,0 +1,442 @@
+
+// Form control [base styles]
+.form-control
+    padding: 12px
+    font-weight: 400
+    height: 50px
+    border-color: $form-border
+    border-radius: $bdr-radius
+
+    &::placeholder
+        font-weight: 400
+
+    &:active, &:focus, &
+        outline: none
+        box-shadow: none
+
+    &:focus
+        border-color: $form-border-active
+
+    &.sm
+        padding: 3px 15px
+        height: 30px
+
+    // for disabled
+    &:disabled, &[readonly]
+        background-color: #fafafa
+
+
+input[type=number]
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+        -webkit-appearance: none
+        margin: 0
+
+    /* Firefox */
+    -moz-appearance: textfield
+
+
+
+.form-group
+    // form tips
+    &.with-tip, .with-tip
+        position: relative
+        .form-tip
+            position: absolute
+            top: 50%
+            transform: translateY(-50%)
+            right: -28px
+            font-size: 18px
+
+    // form actions
+    a.form-action
+        display: inline-block
+        margin-top: 0.25rem
+        font-size: 14px
+        text-decoration: none
+
+    // labels
+    > label
+        font-weight: 500
+
+
+// Correct input groups
+.input-group
+
+    .input-group-append .select-ui .currentValue
+        border-top-left-radius: 0
+        border-bottom-left-radius: 0
+
+
+
+
+
+// Custom select styles
+.select-ui
+    display: inline-block
+    position: relative
+
+    &.mw-150
+        min-width: 150px
+
+    &.mw-220
+        min-width: 220px
+
+    &.mw-250
+        min-width: 250px
+
+    // down line when opened
+    &:after
+        display: block
+        position: absolute
+        bottom: 0
+        content: ''
+        height: .9px // solution of blur problem
+        background: $form-border
+        width: 100%
+        opacity: 0
+        transition-property: width, opacity, margin
+        transition-duration: $base-transition-duration
+
+
+    .placeholder
+        position: absolute
+        color: $light-text
+
+    > .currentValue
+        border: 1px solid $form-border
+        border-radius: $bdr-radius
+        background: $bg-white
+        position: relative
+        padding: 5px 65px 5px 10px
+        cursor: pointer
+        display: flex
+        justify-content: space-between
+        align-items: center
+
+        white-space: nowrap
+
+        transition-property: border, border-radius
+        transition-duration: $base-transition-duration
+
+        // right title
+        .right-title
+            font-size: 14px
+            color: $light-text
+
+            position: absolute
+            right: 65px
+            top: 50%
+            transform: translateY(-50%)
+
+        &.form-control, &.form-control + * + .options > .option
+            padding: 12px 57px 12px 12px
+
+        &.form-control
+            + .icon
+                right: 20px
+            .right-title
+                right: 57px
+
+
+    > .icon
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        right: 10px
+
+        > a
+            display: inline-block
+            color: $light-text
+
+            &.clear
+                opacity: .8
+                font-size: 18px
+                &:hover
+                    opacity: 1
+
+            + .chevron
+                margin-left: 3px
+
+        > .chevron
+            cursor: pointer
+            transition: transform 300ms
+
+    // for required
+    &.required
+        > .currentValue
+            padding-right: 30px
+
+            .right-title
+                right: 30px
+
+            &.form-control
+                padding-right: 45px
+                .right-title
+                    right: 45px
+
+
+    > .options
+        position: absolute
+        background: $bg-white
+        left: 0
+        width: 100%
+        border: 1px solid $c-grey
+        border-top: none
+        max-height: 120px
+        overflow-y: auto
+        z-index: 5
+
+        > .option
+            padding: 5px 10px
+            cursor: pointer
+            position: relative
+            &:hover
+                background: $bg-grey
+
+            .option__subtitle
+                font-size: 13px
+                color: $light-text
+
+            .option__right-title
+                font-size: 14px
+                color: $light-text
+
+                position: absolute
+                right: 10px
+                top: 50%
+                transform: translateY(-50%)
+
+
+
+    // styles of opened
+    &.opened
+
+        &:after
+            opacity: 1
+            width: calc(100% - 24px)
+            margin-left: 12px
+            margin-right: 12px
+
+        > .currentValue
+            border-color: $form-border-active
+            border-bottom-left-radius: 0
+            border-bottom-right-radius: 0
+            border-bottom-color: transparent
+
+        > .icon .chevron
+            transform: rotateX(180deg)
+
+
+
+
+// vue2 datepicker
+.mx-datepicker
+    .mx-input-wrapper
+        input.form-control
+            + i, + i + i
+                right: 20px
+
+
+
+// Simple Search input
+.input-search-wrapper
+    display: flex
+    align-items: center
+
+    > input
+        padding: 7px 15px
+        border-radius: 5px
+        border: 1px solid $c-grey-light
+
+        &.form-control
+            &:hover, &:active, &
+                border-color: $c-grey-light
+
+    > .prepend
+        padding: 7px 7px 7px 15px
+        border-style: solid
+        border-color: $c-grey-light
+        border-top-width: 1px
+        border-left-width: 1px
+        border-bottom-width: 1px
+        border-right-width: 0
+        background: $bg-white
+
+        border-top-left-radius: 5px
+        border-bottom-left-radius: 5px
+
+        color: $light-text
+
+        // fix for form-control
+        &.form-control
+            width: 40px
+            padding-top: 12px
+            border-top-right-radius: 0
+            border-bottom-right-radius: 0
+
+        + input
+            border-top-left-radius: 0
+            border-bottom-left-radius: 0
+            border-left: none
+            padding-left: 5px
+
+            &, &:active, &:focus
+                outline: none
+                box-shadow: none
+
+
+
+// Input-file Component
+.input-file-wrapper
+
+    label
+        display: block
+        font-weight: normal
+
+    input[type=file]
+        display: none
+
+    .dragdrop
+        display: block
+        position: relative
+        border: 1px dashed $c-grey-light
+        padding: 12px 20px
+        cursor: pointer
+
+        .dragdrop-mask
+            position: absolute
+            left: 0
+            top: 0
+            width: 100%
+            height: 100%
+            z-index: 99
+
+        .image-preview
+            height: 100%
+            min-height: 80px
+            width: 100%
+            background-position: center
+            background-repeat: no-repeat
+            background-size: contain
+
+            .reset
+                position: absolute
+                top: 5px
+                right: 5px
+                z-index: 3
+
+
+
+.input-autocomplete-wrapper
+    position: relative
+
+    // down line when opened
+    &:after
+        display: block
+        position: absolute
+        bottom: 0
+        content: ''
+        height: .9px // solution of blur problem
+        background: $form-border
+        width: 100%
+        opacity: 0
+        transition-property: width, opacity, margin
+        transition-duration: $base-transition-duration
+
+    &.choosing
+
+        &:after
+            opacity: 1
+            width: calc(100% - 24px)
+            margin-left: 12px
+            margin-right: 12px
+
+        > input
+            border-bottom: none
+            border-bottom-left-radius: 0
+            border-bottom-right-radius: 0
+            cursor: text
+
+        .autocomplete
+            max-height: 170px
+            overflow-y: auto
+            border-color: $secondary
+
+    > input
+        cursor: pointer
+
+        // transition
+        transition-property: border, border-radius
+        transition-duration: $base-transition-duration
+
+        // placeholder
+        &.with-placeholder
+            padding: 18px 12px 4px
+
+        + .input-autocomplete__placeholder
+            display: block
+            position: absolute
+            left: 13px
+            top: 50%
+            transform: translateY(-50%)
+            white-space: nowrap
+
+            transition-property: top, transform, font-size
+            transition-duration: 250ms
+            cursor: text
+
+        &:focus, &:not(:placeholder-shown)
+            + .input-autocomplete__placeholder
+                top: 5px
+                transform: translateY(0)
+                font-size: 12px
+
+    // loader & chevron
+    .input-autocomplete__loader, .input-autocomplete__reset-btn, .chevron
+        display: block
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        right: 20px
+
+    .chevron
+        transition: transform 300ms
+
+        &.opened
+            transform: translateY(-50%) rotate(180deg)
+
+    .input-autocomplete__reset-btn
+        opacity: 0
+        font-size: 22px
+        right: 40px
+        cursor: pointer
+        transition: opacity $base-transition-duration
+
+    &:hover .input-autocomplete__reset-btn
+        opacity: .5
+
+
+    .autocomplete
+        position: absolute
+        width: 100%
+        border: 1px solid $c-grey-light
+        border-top: none
+        border-bottom-left-radius: 5px
+        border-bottom-right-radius: 5px
+        z-index: 15
+
+        background: $bg-white
+
+        > .autocomplete__item
+            //display: flex
+            cursor: pointer
+            padding: 8px 12px
+
+            .item__subtitle
+                font-size: 13px
+                color: $light-text
+
+            &:hover
+                background: $bg-grey
+
+

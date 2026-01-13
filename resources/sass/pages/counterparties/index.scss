@@ -1,0 +1,38 @@
+@import 'page';
+
+section.table-type-1.counterparties-list{
+    > header{
+        padding: 5px;
+    }
+
+    .table-type-1__table{
+        .cell{
+            &.counterparty{
+                width: calc(36% - 35px);
+
+                .counterparty__category{
+                    font-size: 14px;
+                    color: $light-text;
+                }
+            }
+            &.type{
+                width: calc(10% - 35px);
+            }
+            &.inn{
+                width: calc(25% - 35px);
+            }
+            &.contact{
+                width: calc(38% - 35px);
+
+                > .phone, > .email{
+                    font-size: 14px;
+                }
+
+                .phone{
+                    color: $light-text;
+                }
+            }
+
+        }
+    }
+}

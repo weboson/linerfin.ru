@@ -1,0 +1,64 @@
+.reports{
+
+
+    // toolbar
+    .toolbar{
+
+
+        // calendar
+        .reports__calendar{
+            display: flex;
+            align-items: center;
+            align-self: center;
+
+            &-content{
+                min-width: 200px;
+                text-align: center;
+                padding: 5px 12px;
+                transition: min-width 300ms;
+                font-weight: 500;
+                cursor: default;
+            }
+
+            &.quarter-type .reports__calendar-content{
+                min-width: 100px;
+            }
+
+            > button{
+                padding: 8px 12px;
+                &:hover{
+                    background: $c-grey-light;
+                }
+            }
+        }
+
+
+        // select
+        .period-type-select, .report-type-select{
+            position: relative;
+            align-self: center;
+
+            .currentValue{
+                background: none;
+                border: none;
+                padding: 8px 37px 8px 12px;
+                text-transform: uppercase;
+                font-weight: 500;
+
+                // hover
+                &:hover{
+                    background: $c-grey-light
+                }
+            }
+
+            > .options{
+                &:after, &:before{
+                    display: none;
+                }
+                border: none;
+                box-shadow: 0 2px 15px rgba(0,0,0,.25);
+            }
+        }
+
+    }
+}

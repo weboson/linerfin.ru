@@ -1,0 +1,181 @@
+section.budget-items{
+
+    display: flex;
+    justify-content: stretch;
+    background: $bg-white;
+
+    height: 350px;
+
+    $pdsz: 10px 15px;
+    $bdrclr: $bg-grey;
+
+    // Groups
+    > .budget-items__groups{
+        display: flex;
+        flex-direction: column;
+        width: 250px;
+
+        > header{
+            width: 100%;
+            border-bottom: 1px solid $bdrclr;
+            padding: $pdsz;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        > .content{
+            height: 100%;
+            overflow-y: auto;
+
+            &::-webkit-scrollbar-thumb{
+                background: $bg-grey;
+            }
+
+            .budget-items__group{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                background: $bg-white;
+
+                > .group-name{
+                    padding: $pdsz;
+                    cursor: pointer;
+                    font-weight: 400;
+                    width: 100%;
+                }
+                &.selected {
+                    background: $bg-light-grey;
+                    > .group-name {
+                        color: $accent
+                    }
+                }
+
+                > .actions{
+                    cursor: pointer;
+                    padding: $pdsz;
+                    opacity: 0;
+
+                    &:active{
+                        background-color: $bg-grey
+                    }
+                }
+
+                &:hover {
+                    background: $bg-light-grey;
+                    > .actions{
+                        opacity: 1;
+                    }
+                }
+
+                + .budget-items__group{
+                    border-top: 1px solid $bg-light-grey;
+                }
+            }
+        }
+
+        > footer{
+            border-top: 1px solid $bdrclr;
+            > .budget-items__groups-btn{
+                display: block;
+                padding: $pdsz;
+                width: 100%;
+                text-decoration: none;
+                font-weight: 500;
+                text-align: center;
+                font-size: 14px;
+            }
+        }
+    }
+
+    // Main content
+    > .budget-items__content{
+        width: 100%;
+        border-left: 1px solid $bdrclr;
+        position: relative;
+        overflow-y: auto;
+
+        > header{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: $pdsz;
+            margin-bottom: 15px;
+
+            > * + *{
+                margin-left: 10px;
+            }
+        }
+
+        > .content{
+
+            table.budget-items__table{
+                td, th{
+                    &:first-child{
+                        width: 40px;
+                        padding-left: 10px;
+                    }
+                    &:last-child{
+                        padding-right: 10px;
+                    }
+
+                    &.nothing{
+                        color: $light-text;
+                        text-align: center;
+                        padding: 40px 0 0 0;
+                    }
+                }
+
+                thead{
+                    th, td{
+                        font-size: 14px;
+                        padding: 10px 0;
+                        border-bottom: 1px solid $bdrclr;
+                    }
+
+                    tr.edit-label{
+                        td, th{
+                            background: $bg-blue;
+                            &.actions{
+                                a{
+                                    text-decoration: none;
+                                    font-weight: 500;
+
+                                    + a{
+                                        margin-left: 10px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                tbody{
+                    tr td{
+                        padding: 8px 0;
+                    }
+                    tr:nth-child(even):not(.footer) td{
+                        background-color: $bg-light-grey;
+                    }
+
+                    tr.footer a.btn{
+                        font-size: 14px;
+                        padding: 3px 10px;
+                    }
+
+                    tr:hover:not(.footer) {
+                        td, th{
+                            background-color: $bg-blue;
+                            cursor: pointer;
+
+                            &:first-child{
+                                cursor: default;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,21 @@
+@import "buttons";
+@import "form-inputs";
+@import "others";
+@import "modal";
+@import "font-weight";
+@import "error-label";
+@import "night";
+
+// tables
+@import "tables/table-type-1";
+@import "tables/table-type-2";
+@import "tables/custom-table";
+@import "tables/table-classic";
+
+@import "toolbar";
+@import "switch";
+@import "toasts";
+@import "tooltip";
+@import "mx-datepicker";
+
+@import "~vue2-datepicker/scss/index";

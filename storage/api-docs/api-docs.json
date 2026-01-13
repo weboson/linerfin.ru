@@ -1,0 +1,2867 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Linerfin",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/": {},
+        "/amocrm/connect": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Обмен authorization code на access/refresh tokens",
+                "description": "Ваш ключ - это значение, которое используется для обеспечения безопасности работы \n     *      виджета с аккаунтом Linerfin. Это значение сохраняется в настройках виджета и в базе данных Linerfin.",
+                "operationId": "connect",
+                "parameters": [
+                    {
+                        "name": "referer",
+                        "in": "query",
+                        "description": "адрес аккаунта пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "productlab"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Код авторизации приложения",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "fece5944-fa42-4630-973f-d69e4c2cf7d4"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешное обмен authorization code на access/refresh tokens",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации параметров",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "403": {
+                        "description": "Ошибка обмена authorization code на access/refresh tokens",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/amocrm/get-token": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Получение персонального доступа к аккаунту",
+                "description": "Ваш ключ - это значение, которое используется для обеспечения безопасности работы виджета с аккаунтом Linerfin. Это значение сохраняется в настройках виджета и в базе данных Linerfin.",
+                "operationId": "getPersonalAccessToken",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "query",
+                        "description": "Значение subdomain, которое используется для идентификации аккаунта в системе AmoCRM",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "productlab"
+                    },
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "description": "Значение hash, которое используется для обеспечения безопасности работы виджета с аккаунтом Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "fece5944-fa42-4630-973f-d69e4c2cf7d4"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешное получение персонального доступа к аккаунту",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "40|Z82bi7FUCtczZnwK9WllxQ8yDbWNajtot52LYPBT"
+                                        },
+                                        "Success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации параметров",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Аккаунт не найден",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/sanctum/csrf-cookie": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Установка Cookies CSRF token",
+                "description": "При переходе по данному маршруту в файлах Cookies устанавливается CSRF token",
+                "operationId": "GetSCRF",
+                "responses": {
+                    "200": {
+                        "description": "Установка Cookies CSRF token"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/amocrm/bootstrap": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Получение информации о пользователе и его аккаунтах",
+                "description": "Возвращает информацию о пользователе и его аккаунтах. Для каждого аккаунта возвращаются списки контрагентов и счетов.",
+                "operationId": "bootstrap",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "surname": {
+                                                    "type": "string"
+                                                },
+                                                "patronymic": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "phone": {
+                                                    "type": "string"
+                                                },
+                                                "accounts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "user_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "opf_type_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "nds_type_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "taxation_system_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "subdomain": {
+                                                                "type": "string"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "inn": {
+                                                                "type": "integer"
+                                                            },
+                                                            "kpp": {
+                                                                "type": "integer"
+                                                            },
+                                                            "ogrn": {
+                                                                "type": "integer"
+                                                            },
+                                                            "address": {
+                                                                "type": "string"
+                                                            },
+                                                            "legal_address": {
+                                                                "type": "string"
+                                                            },
+                                                            "director_position": {
+                                                                "type": "string"
+                                                            },
+                                                            "director_name": {
+                                                                "type": "string"
+                                                            },
+                                                            "accountant_position": {
+                                                                "type": "string"
+                                                            },
+                                                            "accountant_name": {
+                                                                "type": "string"
+                                                            },
+                                                            "director_signature_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "accountant_signature_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "logo_attachment_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "stamp_attachment_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "is_demo": {
+                                                                "type": "integer"
+                                                            },
+                                                            "deleted_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "counterparties": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "account_id": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "type": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "category_id": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "opf_type_id": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "inn": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "ogrn": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "kpp": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "address": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "legal_address": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "comment": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "deleted_at": {
+                                                                            "type": "string",
+                                                                            "format": "date"
+                                                                        },
+                                                                        "created_at": {
+                                                                            "type": "string",
+                                                                            "format": "date"
+                                                                        },
+                                                                        "updated_at": {
+                                                                            "type": "string",
+                                                                            "format": "date"
+                                                                        },
+                                                                        "amo_company_id": {
+                                                                            "type": "integer"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "accounts": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "user_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "opf_type_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "nds_type_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "taxation_system_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "subdomain": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "inn": {
+                                                        "type": "integer"
+                                                    },
+                                                    "kpp": {
+                                                        "type": "integer"
+                                                    },
+                                                    "ogrn": {
+                                                        "type": "integer"
+                                                    },
+                                                    "address": {
+                                                        "type": "string"
+                                                    },
+                                                    "legal_address": {
+                                                        "type": "string"
+                                                    },
+                                                    "director_position": {
+                                                        "type": "string"
+                                                    },
+                                                    "director_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "accountant_position": {
+                                                        "type": "string"
+                                                    },
+                                                    "accountant_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "director_signature_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "accountant_signature_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "logo_attachment_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "stamp_attachment_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "is_demo": {
+                                                        "type": "integer"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "counterparties": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "account_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "type": {
+                                                                    "type": "string"
+                                                                },
+                                                                "category_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "opf_type_id": {
+                                                                    "type": "string"
+                                                                },
+                                                                "inn": {
+                                                                    "type": "string"
+                                                                },
+                                                                "ogrn": {
+                                                                    "type": "string"
+                                                                },
+                                                                "kpp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "address": {
+                                                                    "type": "string"
+                                                                },
+                                                                "legal_address": {
+                                                                    "type": "string"
+                                                                },
+                                                                "comment": {
+                                                                    "type": "string"
+                                                                },
+                                                                "deleted_at": {
+                                                                    "type": "string",
+                                                                    "format": "date"
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "format": "date"
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "format": "date"
+                                                                },
+                                                                "amo_company_id": {
+                                                                    "type": "integer"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "nds_types": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "percentage": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "opf_types": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "short_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "code": {
+                                                        "type": "integer"
+                                                    },
+                                                    "for_individual": {
+                                                        "type": "integer"
+                                                    },
+                                                    "for_legal": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/amocrm/bills": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Получение информации о счетах",
+                "description": "Возвращает данные об аккаунте и связанных с ним счетах",
+                "operationId": "bills",
+                "parameters": [
+                    {
+                        "name": "lead_id",
+                        "in": "query",
+                        "description": "Идентификатор сделки",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "50266407"
+                    },
+                    {
+                        "name": "customer_id",
+                        "in": "query",
+                        "description": "Идентификатор покупателя",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1380807"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bills": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "nds_type_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "template_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_lead_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_customer_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "counterparty_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "checking_account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "stamp_attachment_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "logo_attachment_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "num": {
+                                                        "type": "integer"
+                                                    },
+                                                    "sum": {
+                                                        "type": "integer"
+                                                    },
+                                                    "sum_without_vat": {
+                                                        "type": "integer"
+                                                    },
+                                                    "pay_before": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "issued_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "rejected_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "paid_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "realized_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "payer_phone": {
+                                                        "type": "string"
+                                                    },
+                                                    "payer_email": {
+                                                        "type": "string"
+                                                    },
+                                                    "enable_attachments": {
+                                                        "type": "integer"
+                                                    },
+                                                    "comment": {
+                                                        "type": "string"
+                                                    },
+                                                    "reject_comment": {
+                                                        "type": "string"
+                                                    },
+                                                    "link": {
+                                                        "type": "string"
+                                                    },
+                                                    "private_key": {
+                                                        "type": "string"
+                                                    },
+                                                    "access": {
+                                                        "type": "string"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "positions": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "account_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "bill_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "vendor_code": {
+                                                                    "type": "string"
+                                                                },
+                                                                "unit_price": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "count": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "units": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nds_type_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "nds_type": {
+                                                                    "type": "integer"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "signature_list_with_attachments": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "account_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "bill_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "position": {
+                                                                    "type": "string"
+                                                                },
+                                                                "full_name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "signature_attachment_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "signature_attachment": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "checking_account": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "account_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "num": {
+                                                                "type": "string"
+                                                            },
+                                                            "balance": {
+                                                                "type": "integer"
+                                                            },
+                                                            "bank_name": {
+                                                                "type": "string"
+                                                            },
+                                                            "bank_bik": {
+                                                                "type": "string"
+                                                            },
+                                                            "bank_swift": {
+                                                                "type": "string"
+                                                            },
+                                                            "bank_inn": {
+                                                                "type": "integer"
+                                                            },
+                                                            "bank_kpp": {
+                                                                "type": "integer"
+                                                            },
+                                                            "bank_correspondent": {
+                                                                "type": "integer"
+                                                            },
+                                                            "comment": {
+                                                                "type": "string"
+                                                            },
+                                                            "deleted_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "provider": {
+                                                                "type": "string"
+                                                            },
+                                                            "o_auth_account_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "provider_account_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "import_is_active": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "provider_account_updated_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "provider_account_created_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "counterparty": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "account_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "category_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "opf_type_id": {
+                                                                "type": "string"
+                                                            },
+                                                            "inn": {
+                                                                "type": "string"
+                                                            },
+                                                            "ogrn": {
+                                                                "type": "string"
+                                                            },
+                                                            "kpp": {
+                                                                "type": "string"
+                                                            },
+                                                            "address": {
+                                                                "type": "string"
+                                                            },
+                                                            "legal_address": {
+                                                                "type": "string"
+                                                            },
+                                                            "comment": {
+                                                                "type": "string"
+                                                            },
+                                                            "deleted_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "amo_company_id": {
+                                                                "type": "integer"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "transactions": {
+                                                        "type": "array",
+                                                        "items": {}
+                                                    },
+                                                    "stamp_attachment": {
+                                                        "type": "string"
+                                                    },
+                                                    "logo_attachment": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "account": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "user_id": {
+                                                    "type": "integer"
+                                                },
+                                                "opf_type_id": {
+                                                    "type": "integer"
+                                                },
+                                                "nds_type_id": {
+                                                    "type": "integer"
+                                                },
+                                                "taxation_system_id": {
+                                                    "type": "integer"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "subdomain": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "inn": {
+                                                    "type": "integer"
+                                                },
+                                                "kpp": {
+                                                    "type": "integer"
+                                                },
+                                                "ogrn": {
+                                                    "type": "integer"
+                                                },
+                                                "address": {
+                                                    "type": "string"
+                                                },
+                                                "legal_address": {
+                                                    "type": "string"
+                                                },
+                                                "director_position": {
+                                                    "type": "string"
+                                                },
+                                                "director_name": {
+                                                    "type": "string"
+                                                },
+                                                "accountant_position": {
+                                                    "type": "string"
+                                                },
+                                                "accountant_name": {
+                                                    "type": "string"
+                                                },
+                                                "director_signature_id": {
+                                                    "type": "integer"
+                                                },
+                                                "accountant_signature_id": {
+                                                    "type": "integer"
+                                                },
+                                                "logo_attachment_id": {
+                                                    "type": "integer"
+                                                },
+                                                "stamp_attachment_id": {
+                                                    "type": "integer"
+                                                },
+                                                "is_demo": {
+                                                    "type": "integer"
+                                                },
+                                                "deleted_at": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации параметров",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Аккаунт не найден",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/allow-access": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "URL для открытия окна аутентификации в Linerfin и соотношения аккаунта AMOcrm",
+                "operationId": "allow-access",
+                "parameters": [
+                    {
+                        "name": "account",
+                        "in": "query",
+                        "description": "Значение account, которое используется для идентификации аккаунта в системе AmoCRM",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "productlab"
+                    },
+                    {
+                        "name": "client-hash",
+                        "in": "query",
+                        "description": "Значение client-hash, которое используется для обеспечения безопасности работы виджета с аккаунтом Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "fece5944-fa42-4630-973f-d69e4c2cf7d4"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Возврат скрипта закрытия окна"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/amocrm/linerfin-settings": {
+            "get": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Получение параметров",
+                "description": "Возвращает текущие настройки аккаунта AMOcrm.",
+                "operationId": "linerfin-settings-show",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "settings": {
+                                            "properties": {
+                                                "bill_closing": {
+                                                    "type": "boolean"
+                                                },
+                                                "task_creating": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации параметров",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Ошибка доступа",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Аккаунт не найден",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Установка параметров",
+                "description": "Устанавливаем количество закрытых счетов и сделок",
+                "operationId": "linerfin-settings-store",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "bill_closing": {
+                                                "type": "boolean"
+                                            },
+                                            "task_creating": {
+                                                "type": "boolean"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "settings": {
+                                            "properties": {
+                                                "bill_closing": {
+                                                    "type": "boolean"
+                                                },
+                                                "task_creating": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/amocrm/wh/add-company": {
+            "post": {
+                "tags": [
+                    "AMOcrmClient"
+                ],
+                "summary": "Handle incoming company creation webhook from AmoCRM",
+                "operationId": "wh/add-company",
+                "requestBody": {
+                    "description": "JSON object containing account and contacts information",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "required": [
+                                            "account",
+                                            "contacts"
+                                        ],
+                                        "properties": {
+                                            "account": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "account.subdomain": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "contacts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "contacts.add": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "name": {
+                                                "description": "Company name",
+                                                "type": "string"
+                                            },
+                                            "inn": {
+                                                "description": "Taxpayer Identification Number",
+                                                "type": "string"
+                                            },
+                                            "ogrn": {
+                                                "description": "Primary State Registration Number",
+                                                "type": "string"
+                                            },
+                                            "kpp": {
+                                                "description": "Code of Reason for Registration",
+                                                "type": "string"
+                                            },
+                                            "address": {
+                                                "description": "Company address",
+                                                "type": "string"
+                                            },
+                                            "amo_company_id": {
+                                                "description": "ID of the company in AmoCRM",
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://auth.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/bills": {
+            "get": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": "Получение информации о пользователе и его аккаунтах",
+                "description": "Возвращает информацию о пользователе и его аккаунтах. Для каждого аккаунта возвращаются списки контрагентов и счетов.",
+                "operationId": "ui-bills",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bills": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "nds_type_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "template_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "amocrm_account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_lead_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_customer_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "counterparty_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "checking_account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "stamp_attachment_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "logo_attachment_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "num": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "sum": {
+                                                        "type": "integer"
+                                                    },
+                                                    "sum_without_vat": {
+                                                        "type": "integer"
+                                                    },
+                                                    "pay_before": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "issued_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "rejected_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "paid_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "realized_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "payer_phone": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "payer_email": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "enable_attachments": {
+                                                        "type": "integer"
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "reject_comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "link": {
+                                                        "type": "string"
+                                                    },
+                                                    "private_key": {
+                                                        "type": "string"
+                                                    },
+                                                    "access": {
+                                                        "type": "string"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "transactions_sum_amount": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "templates": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "nds_type_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "template_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "amocrm_account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_lead_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "amocrm_customer_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "counterparty_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "checking_account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "stamp_attachment_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "logo_attachment_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "num": {
+                                                        "type": "string"
+                                                    },
+                                                    "sum": {
+                                                        "type": "integer"
+                                                    },
+                                                    "sum_without_vat": {
+                                                        "type": "integer"
+                                                    },
+                                                    "pay_before": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "status": {
+                                                        "type": "string"
+                                                    },
+                                                    "issued_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "rejected_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "paid_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "realized_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "payer_phone": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "payer_email": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "enable_attachments": {
+                                                        "type": "integer"
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "reject_comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "link": {
+                                                        "type": "string"
+                                                    },
+                                                    "private_key": {
+                                                        "type": "string"
+                                                    },
+                                                    "access": {
+                                                        "type": "string"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/bills/{id}": {
+            "get": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": " Получить счет",
+                "description": "Возвращает полную информацию о счете",
+                "operationId": "ui-bills-id",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор счета",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "588"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bill": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "nds_type_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "template_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "amocrm_account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "amocrm_lead_id": {
+                                                    "type": "integer"
+                                                },
+                                                "amocrm_customer_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "counterparty_id": {
+                                                    "type": "integer"
+                                                },
+                                                "checking_account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "stamp_attachment_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "logo_attachment_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "num": {
+                                                    "type": "string"
+                                                },
+                                                "sum": {
+                                                    "type": "integer"
+                                                },
+                                                "sum_without_vat": {
+                                                    "type": "integer"
+                                                },
+                                                "pay_before": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "issued_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "rejected_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "paid_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "realized_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "payer_phone": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "payer_email": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "enable_attachments": {
+                                                    "type": "integer"
+                                                },
+                                                "comment": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "reject_comment": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "link": {
+                                                    "type": "string"
+                                                },
+                                                "private_key": {
+                                                    "type": "string"
+                                                },
+                                                "access": {
+                                                    "type": "string"
+                                                },
+                                                "deleted_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "transactions_sum_amount": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/bills/{id}/positions": {
+            "get": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": "Получить позиции товаров и услуг",
+                "description": "Возвращает информацию о позиции счета.",
+                "operationId": "ui-bills-id-position",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор счета",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "588"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "positions": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1397
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer",
+                                                        "example": 7
+                                                    },
+                                                    "bill_id": {
+                                                        "type": "integer",
+                                                        "example": 588
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ывладыаыва"
+                                                    },
+                                                    "vendor_code": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "unit_price": {
+                                                        "type": "integer",
+                                                        "example": 3232
+                                                    },
+                                                    "count": {
+                                                        "type": "integer",
+                                                        "example": 23
+                                                    },
+                                                    "units": {
+                                                        "type": "string",
+                                                        "example": "шт"
+                                                    },
+                                                    "nds_type_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/bills/save": {
+            "post": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": "Сохранение данных",
+                "description": "Метод для сохранения данных счета.",
+                "operationId": "ui-bills-save",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Данные для сохранения счета",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "strict": {
+                                                "description": "Строгая проверка",
+                                                "type": "boolean",
+                                                "example": "true"
+                                            },
+                                            "id": {
+                                                "description": "ID счета",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "template_id": {
+                                                "description": "ID шаблона счета",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "nds_type_id": {
+                                                "description": "ID типа НДС",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "status": {
+                                                "description": "Статус счета",
+                                                "type": "string",
+                                                "enum": [
+                                                    "draft",
+                                                    "issued",
+                                                    "rejected",
+                                                    "template",
+                                                    "paid",
+                                                    "realized",
+                                                    "realized-paid"
+                                                ],
+                                                "nullable": true
+                                            },
+                                            "stamp_attachment_id": {
+                                                "description": "ID вложения штампа",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "logo_attachment_id": {
+                                                "description": "ID вложения логотипа",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "counterparty_id": {
+                                                "description": "ID контрагента",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "checking_account_id": {
+                                                "description": "ID расчетного счета",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "account_id": {
+                                                "description": "ID компании",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "num": {
+                                                "description": "Номер счета",
+                                                "type": "string",
+                                                "maxLength": 30,
+                                                "nullable": true
+                                            },
+                                            "pay_before": {
+                                                "description": "Дата оплаты",
+                                                "type": "string",
+                                                "format": "date",
+                                                "nullable": true
+                                            },
+                                            "payer_phone": {
+                                                "description": "Телефон плательщика",
+                                                "type": "string",
+                                                "maxLength": 25,
+                                                "nullable": true
+                                            },
+                                            "payer_email": {
+                                                "description": "Email плательщика",
+                                                "type": "string",
+                                                "format": "email",
+                                                "maxLength": 100,
+                                                "nullable": true
+                                            },
+                                            "enable_attachments": {
+                                                "description": "Включить вложения",
+                                                "type": "boolean",
+                                                "nullable": true
+                                            },
+                                            "amocrm_account_id": {
+                                                "description": "ID учетной записи amoCRM",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "amocrm_lead_id": {
+                                                "description": "ID лида amoCRM",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "amocrm_customer_id": {
+                                                "description": "ID клиента amoCRM",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "comment": {
+                                                "description": "Комментарий",
+                                                "type": "string",
+                                                "maxLength": 250,
+                                                "nullable": true
+                                            },
+                                            "name": {
+                                                "description": "Название позиции",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Товар 1"
+                                            },
+                                            "unit_price": {
+                                                "description": "Цена за единицу",
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "example": 100.5
+                                            },
+                                            "count": {
+                                                "description": "Количество",
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "example": 5
+                                            },
+                                            "units": {
+                                                "description": "Единицы измерения",
+                                                "type": "string",
+                                                "maxLength": 50,
+                                                "nullable": true
+                                            },
+                                            "nds_type": {
+                                                "description": "ID типа НДС для позиции",
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "position": {
+                                                "description": "Должность подписанта",
+                                                "type": "string",
+                                                "maxLength": 150,
+                                                "nullable": true
+                                            },
+                                            "full_name": {
+                                                "description": "Полное имя подписанта",
+                                                "type": "string",
+                                                "maxLength": 150,
+                                                "nullable": true
+                                            },
+                                            "signature_attachment_id": {
+                                                "description": "ID вложения подписи",
+                                                "type": "integer",
+                                                "nullable": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID счета",
+                                            "type": "integer"
+                                        },
+                                        "bill": {
+                                            "description": "Информация о счете",
+                                            "type": "object"
+                                        },
+                                        "updated_at": {
+                                            "description": "Время последнего обновления",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка валидации или обработки запроса"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/counterparties": {
+            "get": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": "Получить список контрагентов",
+                "description": "Получить список контрагентов\n     * - контрагенты\n     * - типы контрагентов\n     * - категории контрагентов ",
+                "operationId": "ui-counterparties",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "counterparties": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "LEGAL",
+                                                            "INDIVIDUAL"
+                                                        ]
+                                                    },
+                                                    "category_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "opf_type_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "inn": {
+                                                        "type": "string"
+                                                    },
+                                                    "ogrn": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "kpp": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "address": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "legal_address": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "amo_company_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "opf_types": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "short_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "code": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "for_individual": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "for_legal": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "default": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/counterparties/{counterparty_id}": {
+            "get": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": "Получить контрагента",
+                "description": "Получить информацию о контрагенте ",
+                "operationId": "ui-counterparties-id",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    },
+                    {
+                        "name": "counterparty_id",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "436"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "counterparty": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "LEGAL",
+                                                        "INDIVIDUAL"
+                                                    ]
+                                                },
+                                                "category_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "opf_type_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "inn": {
+                                                    "type": "string"
+                                                },
+                                                "ogrn": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "kpp": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "legal_address": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "comment": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "deleted_at": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string"
+                                                },
+                                                "amo_company_id": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "default": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        },
+        "/ui/bootstrap": {
+            "get": {
+                "tags": [
+                    "UI"
+                ],
+                "summary": "сбор различных элементов данных, таких как баланс, бюджетные позиции, контрагенты, проекты и детали учетной записи",
+                "description": "Подготовка Контроллеров:\n     *   \n     *   Создание экземпляров контроллеров (BalanceController, BudgetItemsController, ProjectsController) с проверкой авторизации.\n     *   Получение Балансов:\n     *   \n     *   Получение информации о балансах с помощью BalanceController и объединение ее с данными ответа.\n     *   Получение Бюджетных Позиций:\n     *   \n     *   Получение бюджетных позиций через BudgetItemsController и добавление их в данные ответа.\n     *   Получение Контрагентов:\n     *   \n     *   Получение информации о контрагентах, связанных с текущей учетной записью, включая контакты, учетные записи, организационную форму и        *   категорию, и добавление их в данные ответа.\n     *   Получение Проектов:\n     *   \n     *   Получение данных о проектах с помощью ProjectsController и объединение их с данными ответа.\n     *   Получение Типов НДС и ОПФ:\n     *   \n     *   Получение типов НДС (Налог на добавленную стоимость) и организационно-правовых форм и включение их в данные ответа.\n     *   Добавление Данных Учетной Записи и Пользователя:\n     *   \n     *   Загрузка деталей учетной записи, включая информацию о пользователе, логотипы и вложения, и добавление их в данные ответа.\n     *   Загрузка данных о связанных учетных записях пользователя, включая вложения и подписи, и добавление их в данные ответа.\n     *   Получение Типов Бюджетных Позиций:\n     *   \n     *   Получение всех типов бюджетных позиций и включение их в данные ответа.\n     *   Результирующий массив данных содержит полный набор информации, необходимой для эффективной работы фронтенда или других частей      *   приложения. Этот метод помогает оптимизировать процесс инициализации и гарантирует доступность всех необходимых данных для     *   последующих операций.",
+                "operationId": "ui-bootstrap",
+                "parameters": [
+                    {
+                        "name": "subdomain",
+                        "in": "path",
+                        "description": "Субдомен аккаунта Linerfin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "profile"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "balance": {
+                                            "properties": {
+                                                "incomes": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "expenses": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "total": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "checking_accounts": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "num": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "balance": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "bank_name": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "bank_bik": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "bank_swift": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "bank_inn": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "bank_kpp": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "bank_correspondent": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "provider": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "o_auth_account_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "provider_account_id": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "import_is_active": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "provider_account_updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "provider_account_created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "budget_items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "parent_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "category": {
+                                                        "type": "string"
+                                                    },
+                                                    "type_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "group_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "archived": {
+                                                        "type": "integer"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "type": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "desc": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "category": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "group": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                            "items": {}
+                                        },
+                                        "types": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "desc": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "category": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "counterparties": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "account_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "category_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "opf_type_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "inn": {
+                                                        "type": "string"
+                                                    },
+                                                    "ogrn": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "kpp": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "address": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "legal_address": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "comment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "amo_company_id": {
+                                                        "type": "integer",
+                                                        "nullable": true
+                                                    },
+                                                    "opf": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "short_name": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "code": {
+                                                                "type": "integer"
+                                                            },
+                                                            "for_individual": {
+                                                                "type": "integer",
+                                                                "nullable": true
+                                                            },
+                                                            "for_legal": {
+                                                                "type": "integer",
+                                                                "nullable": true
+                                                            }
+                                                        },
+                                                        "type": "object",
+                                                        "nullable": true
+                                                    },
+                                                    "category": {
+                                                        "type": "object",
+                                                        "nullable": true
+                                                    },
+                                                    "accounts": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "account_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "balance": {
+                                                                    "type": "number",
+                                                                    "format": "float"
+                                                                },
+                                                                "main": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "type_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "currency_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "bik": {
+                                                                    "type": "string"
+                                                                },
+                                                                "bank_name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "bank_correspondent": {
+                                                                    "type": "string"
+                                                                },
+                                                                "bank_swift": {
+                                                                    "type": "string"
+                                                                },
+                                                                "provider_id": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "provider_account_id": {
+                                                                    "type": "string"
+                                                                },
+                                                                "provider_account_updated_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "provider_account_created_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "deleted_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://{subdomain}.linerfin.ru"
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

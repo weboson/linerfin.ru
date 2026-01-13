@@ -1,0 +1,109 @@
+$topPanelSz: 54px;
+
+body{
+    background: $bg-grey;
+    font-size: $def-font-size;
+    color: $text;
+    padding-top: $topPanelSz;
+    font-family: 'SF UI Display', 'Roboto', sans-serif;
+    min-width: 1200px;
+
+    .content-wrapper{
+        min-height: 100vh;
+        position: relative;
+    }
+}
+
+
+::-webkit-scrollbar{
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar{
+    width: 6px;
+    height: 7px;
+}
+
+
+::-webkit-scrollbar-track{
+    background: transparent;
+    border: none;
+}
+
+
+::-webkit-scrollbar-thumb{
+    background: $form-border
+    //border: 1px solid #eee
+    //height: 100px
+    //border-radius: 5px
+}
+
+
+.loader{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    color: $light-text;
+
+    z-index: 10;
+
+    // top-space mod
+    display: flex;
+    justify-content: center;
+    padding-top: 80px;
+
+    // centered
+    &.centered{
+        display: flex;
+        align-items: center;
+        padding-top: 0;
+    }
+
+    &__white-bg{
+        animation-name: loaderWhiteBg;
+        -webkit-animation-duration: 3s;
+        -moz-animation-duration: 3s;
+        -o-animation-duration: 3s;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        transition: background 300ms;
+    }
+
+    @keyframes loaderWhiteBg{
+        from{
+            background: rgba(255,255,255,.3);
+        }
+        50%{
+            background: rgba(255,255,255,.7);
+        }
+        to{
+            background: rgba(255,255,255,.3);
+        }
+    }
+}
+
+.loader-wrapper{
+    position: relative;
+}
+
+// background loader
+.background-loader{
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: $bdr-radius;
+    border: 1px solid $c-grey-light;
+
+    display: flex;
+    align-items: center;
+
+    > .title{
+        margin-left: 15px;
+    }
+}

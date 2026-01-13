@@ -1,0 +1,113 @@
+main
+    position: relative
+    margin-left: $sidebar-sz
+    min-height: 100vh
+    padding-bottom: 10%
+
+    .top-header + .container-fluid, > .container-fluid:first-child
+        padding-top: 50px
+
+    > .container-fluid, .top-header-wrapper > .top-header, .top-header-wrapper > .container-fluid
+        padding-left: 30px
+        padding-right: $wrapper-pd
+
+
+    // *** Top header panel ***
+    .top-header
+        position: sticky
+        top: $topPanelSz
+        z-index: 20
+
+        background: $bg-white
+        border-top: 1px solid $c-grey-light
+        padding-top: 25px
+        padding-bottom: 25px
+
+        // with offset
+        transition-property: box-shadow
+        transition-duration: 150ms
+
+        &.with-offset
+            box-shadow: 0 0 11px 2px rgb(0 0 0 / 20%)
+
+
+        header.title
+            font-size: 32px
+            font-weight: bold
+
+            &:first-child
+                margin-top: 24px
+
+        .breadcrumbs-wrapper
+            display: flex
+
+            > .back-link
+                text-decoration: none
+
+            > ul.breadcrumbs
+                color: $light-text
+                margin-bottom: 0
+
+                > li
+                    display: inline-block
+
+                    + li
+                        margin-left: 3px
+                        &:before
+                            display: inline-block
+                            color: $light-text
+                            content: '/'
+                            margin-right: 5px
+
+                    &:last-child
+                        color: $text
+
+        &.with-nav
+            padding-bottom: 0
+
+            > footer
+                display: flex
+                justify-content: space-between
+                margin-top: 20px
+
+                // setting's navigation
+                > nav
+                    display: flex
+
+                    > a
+                        display: block
+                        padding: 5px 2px
+                        text-decoration: none
+                        border-bottom: 3px solid transparent
+                        transition-property: border, color
+                        transition-duration: $base-transition-duration
+
+                        + a
+                            margin-left: 38px
+
+                        &.active
+                            color: $text
+                            border-bottom-color: $c-blue
+
+                        &:hover
+                            border-bottom-color: $c-blue-light
+
+                // exit button
+                > .logout-wrapper
+                    > a
+                        text-decoration: none
+
+
+        // for top-header's pages content
+        + .container-fluid.top-header__content
+
+            .width-limited
+                max-width: 1150px
+
+            > header
+                margin-bottom: 25px
+
+            > .content
+                border-radius: $bdr-radius
+                padding: 20px
+                background: #fff

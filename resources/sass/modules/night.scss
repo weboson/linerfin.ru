@@ -1,0 +1,209 @@
+.wrapper.dark-view{
+    $dark-bg-0: #242424;
+    $dark-bg-1: #313030;
+    $dark-bg-2: #383838;
+    $dark-bg-3: #3b3b3b;
+    $dark-bg-4: #464646;
+    $dark-font: #f4f4f4;
+    $dark-font-1: #d5d5d5;
+
+    background: $dark-bg-0;
+    color: $dark-font;
+
+
+    // scroll bar
+    ::-webkit-scrollbar-thumb{
+        background: $dark-bg-4;
+        //border: 1px solid #eee
+    }
+
+
+
+    // loader
+    .loader{
+        background: $dark-bg-0;
+
+        &__white-bg{
+            animation-name: loaderDarkBg;
+            -webkit-animation-duration: 3s;
+            -moz-animation-duration: 3s;
+            -o-animation-duration: 3s;
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+            transition: background 300ms;
+        }
+
+        @keyframes loaderDarkBg{
+            from{
+                background: rgba(0,0,0,.3);
+            }
+            50%{
+                background: rgba(0,0,0,.7);
+            }
+            to{
+                background: rgba(0,0,0,.3);
+            }
+        }
+    }
+
+    #sidebar, #top-panel{
+        background: $dark-bg-1;
+        color: $dark-font;
+    }
+
+
+    // top panel
+    #top-panel{
+        .linerfin-logo-container .linerfin-logo{
+            background-image: url("/assets/images/dark/linerfin.svg");
+        }
+
+        .total-balance{
+            border-left: 1px solid $dark-bg-0;
+        }
+    }
+
+
+    // sidebar
+    #sidebar{
+        border-color: $dark-bg-0;
+        nav ul > li > a{
+            color: $dark-font;
+            &:hover{
+                background: $dark-bg-2;
+            }
+            &:before{
+                background: $dark-bg-2;
+            }
+        }
+    }
+
+
+    // main page
+    section.overall-balance > .bill-balance{
+        &.opened {
+            background-color: $dark-bg-1;
+
+            > footer a:hover {
+                background-color: $dark-bg-2;
+            }
+        }
+        > footer a:hover {
+            background-color: $dark-bg-1;
+        }
+    }
+    section.transactions .toolbar.filter .toolbar__period-picker > .fake-placeholder{
+        background-color: $dark-bg-2;
+    }
+
+    section.transactions .transactions__graph {
+        > footer a:hover{
+            background: $dark-bg-1;
+        }
+        &.opened {
+            background: $dark-bg-1;
+            > footer a:hover{
+                background: $dark-bg-2;
+            }
+        }
+    }
+    section.transactions .toolbar.filter form.filters-form .transactions__filter-popup{
+        background: $dark-bg-1;
+    }
+
+
+    // buttons
+    .btn{
+        &.btn-outline-secondary{
+            border-color: $dark-bg-2;
+            &:hover, &:active, &.active{
+                background: $dark-bg-2;
+            }
+        }
+        &.btn-primary{
+            background: #15487c;
+            border-color: #15487c;
+            &:hover, &.active, &:active{
+                background: darken(#15487c, 3);
+                border-color: darken(#15487c, 3);
+            }
+        }
+    }
+
+
+    // form-inputs
+    .form-control{
+        background: $dark-bg-2;
+        border-color: $dark-bg-1;
+        color: $dark-font;
+        &::placeholder{
+            color: $dark-font-1;
+        }
+    }
+
+    .select-ui {
+        > .currentValue{
+            border-color: $dark-bg-1;
+            background-color: $dark-bg-2;
+            color: $dark-font;
+            .placeholder{
+                color: $dark-font-1;
+            }
+        }
+        > .options{
+            background: $dark-bg-2;
+            border-color: $dark-bg-1;
+            &:before{
+                background: $dark-bg-1;
+            }
+            > .option:hover{
+                background: $dark-bg-3;
+            }
+        }
+    }
+
+    .custom-control-label::before{
+        background-color: $dark-bg-3;
+        border-color: $dark-bg-1;
+    }
+
+
+    // tables
+    .table-type-1{
+        background-color: $dark-bg-1;
+        .table-type-1__table {
+            &, > header, .table-type-1__table-row-header {
+                border-color: $dark-bg-3;
+            }
+
+            > header.exists-selected{
+                background: $dark-bg-2;
+            }
+        }
+    }
+
+
+    // layout
+    main .top-header{
+        background: $dark-bg-1;
+        border-color: $dark-bg-0;
+    }
+
+
+
+    // popups
+    .vuedals{
+        .vuedal.right-modal{
+            &, .modal-buttons{
+                background: $dark-bg-0;
+            }
+        }
+    }
+
+
+    // mx-datepicker
+    .mx-datepicker svg{
+        color: $dark-font
+    }
+}

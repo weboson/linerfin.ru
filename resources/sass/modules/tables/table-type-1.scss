@@ -1,0 +1,136 @@
+.table-type-1 {
+    background: $bg-white;
+    border-radius: $bdr-radius;
+
+    // total sum
+    > header {
+        padding: 20px;
+        display: flex;
+    }
+
+
+    .table-type-1__table {
+        border-top: 1px solid $c-grey-light;
+
+        > header {
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid $c-grey-light;
+
+            .cell{
+                color: $light-text
+            }
+
+            // on exist selected transactions
+            &.exists-selected {
+                background: $bg-blue-2;
+
+                .select-toolbar {
+                    a {
+                        margin-left: 50px;
+                        text-decoration: none;
+
+                        &.remove-btn {
+                            color: $c-red;
+                        }
+                    }
+                }
+            }
+        }
+
+        // If nothing
+        .table-type-1__nothing{
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            color: $light-text;
+        }
+
+        // Table's row
+        .table-type-1__table-row{
+
+            // Table-row's header
+            &-header {
+                display: flex;
+                align-items: stretch;
+                border-bottom: 1px solid $bg-grey;
+
+                .cell:not(.select) {
+                    cursor: pointer;
+                }
+            }
+
+
+            // Table-row's inner content
+            &-content {
+                background: $bg-light-grey;
+                padding: 20px 150px;
+                border-bottom: 1px solid $bg-grey;
+
+                > footer {
+                    padding-top: 30px;
+                    text-align: center;
+                    > a {
+                        padding: 5px 15px;
+                        color: $light-text;
+                        text-decoration: none;
+                    }
+
+                }
+            }
+        }
+
+        // Cell's styles
+        > header .cell, .table-type-1__table-row-header > .cell {
+            padding: 20px 15px;
+            &.select {
+                width: 35px;
+                padding-right: 0;
+            }
+
+        }
+
+
+    }
+
+    > footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        margin-top: 20px;
+
+        // Pagination
+        .pagination {
+            > .pageLink {
+                color: $light-text;
+                text-decoration: none;
+
+                &:hover,
+                &.current {
+                    color: $accent;
+                }
+
+                // spaces
+                + * {
+                    margin-left: 20px;
+                }
+
+            }
+        }
+
+        // Per page count
+        .per-page-count {
+            display: flex;
+            align-items: center;
+            .select-ui {
+                width: 70px;
+                margin-left: 10px;
+            }
+            span {
+                color: $light-text;
+                display: inline-block;
+                white-space: nowrap;
+            }
+        }
+    }
+}

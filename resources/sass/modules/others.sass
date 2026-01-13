@@ -1,0 +1,115 @@
+
+// ** Icons spacing **
+$icons-space: 3px
+
+.icon-left
+    margin-right: $icons-space
+
+.icon-right
+    margin-left: $icons-space
+
+
+// ** Price format **
+.price-format
+    font-size: 1em
+    display: flex
+    align-items: baseline
+    white-space: nowrap
+
+    &.align-right
+        justify-content: flex-end
+
+    > .penny
+        font-size: .75em
+        opacity: .55
+
+        &:before
+            content: ','
+
+        &:after
+            content: ' ₽'
+
+    &.without-currency > .penny:after
+        content: ''
+
+
+// Font-size
+.fz-
+    &10
+        font-size: 10px
+    &12
+        font-size: 12px
+    &14
+        font-size: 14px
+    &16
+        font-size: 16px
+    &18
+        font-size: 18px
+    &20
+        font-size: 20px
+    &22
+        font-size: 22px
+    &24
+        font-size: 24px
+    &26
+        font-size: 26px
+    &52
+        font-size: 52px
+
+
+.header-title
+    font-weight: bold
+    margin-bottom: 20px
+
+
+.border-box
+    border: 1px solid $border-color
+    padding: 10px 15px
+
+.border-left
+    border-left: 1px solid $border-color
+
+.border-bottom
+    border-bottom: 1px solid $border-color
+
+.border-right
+    border-right: 1px solid $border-color
+
+.border-top
+    border-top: 1px solid $border-color
+
+
+.row-mg
+    margin-left: -20px
+    margin-right: -20px
+
+.col-pd
+    padding-left: 20px
+    padding-right: 20px
+
+
+// backgrounds
+.bg-grey
+    background-color: $bg-grey
+.bg-light-grey
+    background-color: $bg-light-grey
+.bg-white
+    background-color: $bg-white
+.bg-blue
+    background-color: $bg-blue
+.bg-blue-2
+    background-color: $bg-blue-2
+
+
+
+// input groups
+.input-group
+    > .input-ui
+        &:first-child .form-control
+            border-top-right-radius: 0
+            border-bottom-right-radius: 0
+
+        + .form-control, + .btn
+            margin-left: 0
+            border-top-left-radius: 0
+            border-bottom-left-radius: 0

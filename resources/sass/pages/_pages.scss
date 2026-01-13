@@ -1,0 +1,18 @@
+@import "main-page";
+// @import "auth/page"; - connected aside
+
+// Counterparties
+@import "counterparties";
+
+// Bills
+@import "bills";
+
+@import "reports/reports";
+@import "reports/pnl";
+
+// settings
+@import 'settings/projects';
+@import 'settings/budget-items';
+@import 'settings/common';
+@import "settings/companies";
+@import "settings/banks";

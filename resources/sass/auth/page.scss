@@ -1,0 +1,97 @@
+@import "../variables";
+@import "../configs/animations";
+@import "bootstrap";
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
+@import "../layout/default";
+
+@import "../modules/buttons";
+@import "../modules/form-inputs";
+
+@import "account";
+@import "bills.scss";
+
+
+body{
+    font-size: $def-font-size;
+    color: $text;
+    font-family: 'SF UI Display', 'Roboto', sans-serif;
+    min-width: auto !important;
+}
+
+
+.static-page{
+    &#auth{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        #top-bar{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    #top-bar{
+        width: 100%;
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        .logo{
+            display: inline-block;
+            //height: 26px;
+            height: 38px;
+            width: 136px;
+            //background: url('/assets/images/linerfin.svg') center/contain no-repeat;
+            background: url('/assets/images/linerfin.png') center/contain no-repeat;
+        }
+
+        .support{
+            text-align: right;
+
+            .phone{
+                text-decoration: none;
+                color: $text;
+                font-size: 24px;
+                font-weight: 400;
+            }
+
+            .subtitle{
+                text-transform: lowercase;
+                color: $light-text;
+                font-weight: 300;
+                font-size: 14px;
+            }
+        }
+    }
+
+    #form{
+        background: $bg-light-grey;
+        padding: 50px 70px;
+        border-radius: 10px;
+        width: 560px;
+        max-width: 100%;
+
+        .form-title{
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 22px;
+
+            > .subtitle{
+                margin-top: 10px;
+                font-size: 18px;
+                font-weight: 300;
+                color: $light-text;
+            }
+        }
+
+        form > footer{
+            color: $light-text;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    }
+}
+

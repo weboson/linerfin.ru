@@ -1,0 +1,27 @@
+.mx-datepicker{
+    &-popup{
+        display: flex;
+        > * {
+            float: none;
+        }
+
+        .mx-datepicker-sidebar {
+            width: auto;
+            padding: 0;
+
+            > button{
+                display: block;
+                padding: 5px 12px;
+            }
+
+            + .mx-datepicker-content{
+                margin-left: 0;
+                border-left: 1px solid $c-grey-light
+            }
+        }
+
+        .mx-calendar + .mx-calendar{
+            border-left: 1px solid $c-grey-light;
+        }
+    }
+}

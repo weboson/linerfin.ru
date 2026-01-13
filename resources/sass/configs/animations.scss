@@ -1,0 +1,73 @@
+$base-transition-duration: 300ms;
+
+// ** Slide Toggle **
+.slide-leave-active, .slide-enter-active {
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+.slide-enter-to, .slide-leave {
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.slide-enter, .slide-leave-to {
+    overflow: hidden;
+    max-height: 0;
+}
+
+
+// ** Fade up **
+/*.fade-up{
+    &.
+}*/
+
+
+// *** Fade simple ***
+.fade{
+
+    &-enter-to, &-leave{
+        opacity: 1;
+    }
+
+    &-enter, &-leave-to{
+        opacity: 0;
+    }
+
+    &-leave-active, &-enter-active{
+        transition: opacity 300ms
+    }
+}
+
+// Fade with ease-out
+.fade-out{
+
+    &-enter-to, &-leave{
+        opacity: 1;
+    }
+
+    &-enter, &-leave-to{
+        opacity: 0;
+    }
+
+    &-leave-active{
+        transition: opacity 300ms
+    }
+}
+
+// *** Fade with pos:absolute ***
+.fade-a{
+
+    &-enter-to, &-leave{
+        opacity: 1;
+    }
+
+    &-enter, &-leave-to{
+        opacity: 0;
+    }
+
+    &-leave-active, &-enter-active{
+        position: absolute;
+        transition: opacity 300ms
+    }
+}

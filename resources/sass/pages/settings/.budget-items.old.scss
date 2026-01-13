@@ -1,0 +1,129 @@
+> .nothing{
+    color: $light-text;
+}
+
+> .budget-items__list{
+    > .budget-item{
+        display: flex;
+        align-items: center;
+
+        // Spacing
+        > * + *{
+            margin-left: 20px;
+        }
+        + .budget-item{
+            margin-top: 15px;
+        }
+
+        // table imitation
+        > div:first-child{
+            width: 20px;
+        }
+
+        > div.budget-item__name{
+            width: 250px;
+        }
+
+
+        // Styles
+        .budget-item__name{
+            padding: 7px 15px;
+            background: #fff;
+            border: 1px solid $c-grey-light;
+            border-radius: 5px;
+            position: relative;
+
+            > span.archived{
+                position: absolute;
+                top: 3px;
+                right: 5px;
+                font-size: 10px;
+                color: $light-text;
+            }
+        }
+
+        .budget-item__actions{
+            > * + *{
+                margin-left: 10px;
+            }
+
+            > a{
+                text-decoration: none;
+            }
+
+            > a.remove-action{
+                color: $c-red
+            }
+        }
+
+    }
+}
+
+
+// budget-items top
+.budget-items__top{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+// budget-items show types
+.budget-items__types{
+
+    > .budget-items__type{
+        display: inline-block;
+        padding-bottom: 3px;
+        text-decoration: none;
+
+        border-bottom: 3px solid transparent;
+        transition: border-color $base-transition-duration;
+
+        + .budget-items__type{
+            margin-left: 15px;
+        }
+
+        &.selected{
+            border-bottom-color: $c-blue
+        }
+    }
+}
+
+// budget-items search
+.budget-items__search{
+    display: flex;
+    align-items: center;
+
+    > input{
+        padding: 7px 15px;
+        border-radius: 5px;
+        border: 1px solid $c-grey-light;
+    }
+
+    > .prepend{
+
+        padding: 7px 7px 7px 15px;
+        border-style: solid;
+        border-color: $c-grey-light;
+        border-top-width: 1px;
+        border-left-width: 1px;
+        border-bottom-width: 1px;
+        border-right-width: 0;
+
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+
+        color: $light-text;
+
+        + input{
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: none;
+            padding-left: 5px;
+
+            &, &:active, &:focus{
+                outline: none;
+                box-shadow: none;
+            }
+        }
+    }
+}

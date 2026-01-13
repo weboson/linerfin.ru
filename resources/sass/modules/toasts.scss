@@ -1,0 +1,68 @@
+body{
+
+    $toast-width: 250px;
+    $danger-toast: #ee525c;
+    $success-toast: #66cf56;
+
+    @mixin toast-shadow($color){
+        box-shadow: 0 0 5px $color;
+    }
+
+
+    // Fix position
+    .b-toaster.b-toaster-top-right .b-toaster-slot, .b-toaster.b-toaster-top-left .b-toaster-slot, .b-toaster.b-toaster-top-center .b-toaster-slot, .b-toaster.b-toaster-top-full .b-toaster-slot, .b-toaster.b-toaster-bottom-right .b-toaster-slot, .b-toaster.b-toaster-bottom-left .b-toaster-slot, .b-toaster.b-toaster-bottom-center .b-toaster-slot, .b-toaster.b-toaster-bottom-full .b-toaster-slot{
+        max-width: $toast-width
+    }
+
+    .b-toaster .b-toast{
+
+        max-width: $toast-width;
+
+        .toast{
+            max-width: $toast-width;
+            border: none;
+            border-radius: 7px;
+            @include toast-shadow(#fff);
+
+            background: #fff;
+
+            .toast-header{
+                background: transparent;
+                border-bottom: none;
+                > strong{
+                    font-weight: normal;
+                    font-size: 13px;
+                }
+                button.close{
+                    font-weight: normal;
+                    font-size: 20px;
+                }
+            }
+
+            .toast-body{
+                padding-top: 6px;
+            }
+        }
+
+        &-danger .toast{
+
+            @include toast-shadow($danger-toast);
+
+            background: $danger-toast;
+            color: #fff;
+
+            .toast-header{
+                color: rgba(255,255,255,.7);
+            }
+            button.close{
+                color: #fff;
+            }
+        }
+
+        &-success .toast{
+            @include toast-shadow($success-toast);
+            background: $success-toast;
+        }
+    }
+
+}

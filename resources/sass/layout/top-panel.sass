@@ -1,0 +1,179 @@
+#top-panel
+    background-color: #fff
+    position: fixed
+    width: 100%
+    z-index: 99
+    padding-left: $wrapper-pd
+    padding-right: $wrapper-pd
+    top: 0
+
+    // with offset
+    transition-property: box-shadow
+    transition-duration: 150ms
+
+    &.with-offset
+        box-shadow: 0 0 11px 2px rgb(0 0 0 / 20%)
+
+    // *** Main row ***
+    > .row
+        height: $topPanelSz
+
+    .panel-base
+        display: flex
+        flex-direction: row
+        align-items: stretch
+        justify-content: space-between
+
+        > .left, > .right
+            display: flex
+            flex-direction: row
+            align-items: stretch
+
+
+        > .left
+            justify-content: flex-start
+
+            > *
+                padding-left: 30px
+                padding-right: 30px
+
+                &:last-child
+                    padding-right: 0
+
+        > .right
+            justify-content: flex-end
+
+            > *
+                display: flex
+                align-items: center
+
+                + *
+                    margin-left: 30px
+
+
+    // *** Logo Linerfin ***
+    .linerfin-logo-container
+        padding-left: 15px
+        padding-right: 15px
+        width: $sidebar-sz - $wrapper-pd + 15px
+        display: flex
+        align-items: center
+
+        .linerfin-logo
+            height: 20px
+            width: 102px
+            background: url('/assets/images/linerfin.svg') center/contain no-repeat
+
+
+    // *** Choose organization ***
+    .choose-organization
+        height: 100%
+        position: relative
+        display: flex
+        align-items: center
+
+        &.opened .choose-btn .b-icon
+            transform: rotate(180deg)
+
+        > div.choose-btn
+            font-size: 20px
+            text-decoration: none
+            display: block
+            padding-top: 5px
+            padding-bottom: 5px
+            vertical-align: center
+            white-space: nowrap
+            cursor: pointer
+
+            .b-icon
+                transition: transform $base-transition-duration
+
+
+        > .choose-organization__dropdown
+            position: absolute
+            width: 100%
+            bottom: 0
+            left: 0
+            transform: translateY(100%)
+            z-index: 100
+            background: $bg-white
+            box-shadow: -1px 5px 15px rgb(0 0 0 / 8%)
+
+            > a
+                display: block
+                text-decoration: none
+                padding: 10px 15px
+                color: $text
+
+                &:hover
+                    background: $bg-light-grey
+
+
+    // *** Total Balance ***
+    .total-balance
+        border-left: 1px solid $c-grey-light
+        display: flex
+        flex-direction: column
+        justify-content: center
+
+        > .title
+            font-size: 14px
+            color: $light-text
+            line-height: 14px
+            margin-bottom: 3px
+
+        > .balance
+            font-size: 24px
+            line-height: 24px
+            display: flex
+            align-items: flex-end
+
+            > .penny
+                font-size: 18px
+                line-height: 22px
+                color: $light-text
+
+                &:before
+                    content: ','
+
+                &:after
+                    content: ' ₽'
+
+
+    // *** Help me link ***
+    .help-me
+        text-decoration: none
+        color: $light-text
+
+
+
+    // *** User Profile btn ***
+    .user-profile
+        text-align: right
+        position: relative
+
+        > .username
+            cursor: pointer
+            text-align: center
+
+        > .subtitle
+            cursor: pointer
+            color: $c-blue
+
+        &__menu
+            position: absolute
+            right: 0
+            background: $bg-white
+            width: 180px
+            text-align: left
+            z-index: 100
+            box-shadow: -1px 5px 15px rgb(0 0 0 / 8%)
+
+            > a
+                display: block
+                text-decoration: none
+                padding: 10px 15px
+                color: $text
+
+                &:hover
+                    background: $bg-light-grey

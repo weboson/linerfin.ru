@@ -1,0 +1,43 @@
+before_script:
+  - export PATH=$PATH:/usr/local/bin
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+     - cd ..
+     - rm -rf linerfin.ru
+     - rm -rf /home/gitlab-runner/linerfin.ru
+     - rm linerfin.ru_backup.zip
+     - mv linerfinru linerfin.ru
+     - zip -r linerfin.ru_backup.zip linerfin.ru
+  tags:
+    - shell
+#testing:
+ # stage: test
+  #script:
+   # - php /var/www/linerfin.ru/tests/Unit/ExampleTest.php
+  #tags:
+   # - shell
+
+deploy:
+  stage: deploy
+  script:
+     - cd ..
+     - mv $SITE_PATH /home/gitlab-runner/
+     - mv linerfin.ru /var/www/
+     - cd /opt/
+     - sh $COPY
+     - docker-compose -f docker-compose_laravel.yml down
+     - docker-compose -f docker-compose_laravel.yml up -d
+     - sh $SCRIPT
+     - docker exec --workdir /var/www/linerfin.ru app composer install
+     - ADMIN_URL="$ADMIN_URL" S3_BACKUPS_ACCESSKEY="$S3_BACKUPS_ACCESSKEY" S3_BACKUPS_SECRETKEY="$S3_BACKUPS_SECRETKEY" S3_ACCESS="$S3_ACCESS" S3_SECRET="$S3_SECRET" SECRET_TOKEN_WS="$SECRET_TOKEN_WS" DB_NAME="$DB_NAME" DB_PASSWORD="$DB_PASSWORD" DB_USER="$DB_USER"
+
+  when: on_success
+  tags:
+    - shell

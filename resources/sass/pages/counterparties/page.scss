@@ -1,0 +1,27 @@
+section.page-counterparty {
+
+    .sec-header{
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .sec-right{
+        padding-left: 30px;
+        border-left: 1px solid $c-grey-light;
+    }
+
+    table.custom-table {
+        margin: 15px 0;
+
+        th {
+            width: 30%;
+        }
+    }
+
+    section.contacts{
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid $c-grey-light;
+    }
+
+}

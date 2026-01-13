@@ -1,0 +1,115 @@
+#sidebar
+    position: fixed
+    background: $bg-white
+    width: $sidebar-sz
+    height: 100%
+    z-index: 100
+    border-top: 1px solid $c-grey-light
+    border-right: 1px solid $bg-grey
+
+
+    // *** Minify button ***
+    .sidebar-minify
+        display: block
+        padding: 5px 15px 5px $wrapper-pd
+        color: $light-text
+        text-decoration: none
+        margin-top: 10px
+        margin-bottom: 5px
+        white-space: nowrap
+        font-weight: 500
+
+        > *
+            vertical-align: middle
+
+        img
+            width: 28px
+            transition: transform $base-transition-duration
+
+        span
+            display: inline-block
+            margin-left: 5px
+            transition: opacity $base-transition-duration
+
+
+    // *** Navigation styles ***
+    nav ul
+        margin: 0
+        padding: 0
+        list-style: none
+
+        > li
+            display: block
+
+            //+ li
+            //    margin-top: 10px
+
+            > a
+                display: block
+                position: relative
+                padding: 10px 15px 10px $wrapper-pd
+                text-decoration: none
+                color: $text
+                vertical-align: baseline
+                white-space: nowrap
+                font-weight: 500
+                transition: background-color $base-transition-duration
+
+                > *
+                    vertical-align: middle
+                    position: relative
+
+                > img
+                    height: 28px
+                    width: 28px
+                    display: inline-block
+
+                    + span
+                        display: inline-block
+                        margin-left: 5px
+                        transition: opacity $base-transition-duration
+
+                &:before
+                    content: ''
+                    position: absolute
+                    right: 0 //left: 0
+                    top: 0
+                    width: 0
+                    height: 100%
+                    background: $bg-grey
+                    transition-property: width, background, opacity, border-radius
+                    transition-duration: $base-transition-duration
+                    opacity: .3
+                    border-bottom-left-radius: 30px
+                    border-top-left-radius: 30px
+
+                &:hover
+                    background-color: $bg-light-grey
+
+                &.active:before
+                    opacity: 1
+                    width: 100%
+                    border-bottom-left-radius: 0
+                    border-top-left-radius: 0
+
+    &.minify
+        width: 100px
+        overflow: hidden
+
+        .sidebar-minify img
+            transform: rotate(-180deg)
+            + span
+                opacity: 0
+
+        + main
+            margin-left: 100px
+
+        nav ul
+            a > span
+                opacity: 0
+
+
+    // transitions for minify
+    transition: width $base-transition-duration
+    + main
+        transition: margin-left $base-transition-duration

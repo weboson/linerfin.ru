@@ -1,0 +1,37 @@
+/*!
+ *  Vuedals plugin v1.8.0
+ * 
+ *  Multiple event based modal windows, with a single component
+ * 
+ *  This is a plugin to open any number of modal windows without having to attach them to the DOM
+ *  @author Javis Perez <javisperez@gmail.com>
+ *  https://github.com/javisperez/vuedals
+ *  Released under the MIT License.
+ */
+
+/*!
+ * Vue.js v2.7.10
+ * (c) 2014-2022 Evan You
+ * Released under the MIT License.
+ */
+
+/*!
+ * dist/inputmask
+ * https://github.com/RobinHerbots/Inputmask
+ * Copyright (c) 2010 - 2021 Robin Herbots
+ * Licensed under the MIT license
+ * Version: 5.0.7
+ */
+
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+//! moment.js
+
+//! moment.js locale configuration

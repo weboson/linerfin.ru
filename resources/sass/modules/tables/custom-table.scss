@@ -1,0 +1,43 @@
+table.custom-table{
+    width: 100%;
+
+    &.layout-fixed{
+        table-layout: fixed;
+    }
+
+    th {
+        font-weight: 500;
+        color: $light-text;
+    }
+
+    th, td {
+        padding: 5px 0;
+
+        &.vertical-top{
+            vertical-align: top;
+
+            &.pt{
+                padding-top: 17px;
+            }
+        }
+    }
+
+    td{
+        font-size: 15px;
+    }
+
+
+    // With header-cell width
+    &.th-150 th{
+        width: 150px;
+    }
+    &.th-170 th{
+        width: 170px;
+    }
+    &.th-200 th{
+        width: 200px;
+    }
+    &.th-300 th{
+        width: 300px;
+    }
+}

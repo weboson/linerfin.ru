@@ -1,0 +1,40 @@
+.settings-page .settings__banks{
+
+    section.table-type-1{
+        > header{
+            padding: 5px;
+        }
+
+        .table-type-1__table{
+            .cell{
+
+                &.name{
+                    width: calc(35% - 35px);
+
+                    .subtitle{
+                        font-size: 14px;
+                        color: $light-text;
+                    }
+                }
+                &.num{
+                    width: calc(28% - 35px);
+                }
+                &.bank{
+                    width: calc(28% - 35px);
+                    color: $light-text;
+                }
+                &.sum{
+                    width: calc(20% - 35px);
+                    text-align: right;
+                    padding-right: 30px;
+
+                    .price-format{
+                        justify-content: flex-end;
+                    }
+                }
+
+            }
+        }
+    }
+
+}

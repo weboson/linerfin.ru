@@ -1,0 +1,115 @@
+// [Section] Overall balance
+section.overall-balance
+
+    // -- total balance
+    > .total
+
+        + .bill-balance
+            margin-top: 30px
+
+        .total-sum
+            > .title
+                color: $light-text
+                margin-bottom: 5px
+
+                > a
+                    color: $c-blue
+                    font-size: 18px
+                    margin-left: 5px
+
+            > .balance
+                font-size: 52px
+                line-height: 52px
+
+        .month-total
+            > .month-name
+                color: $light-text
+                margin-bottom: 15px
+
+            > .month-transactions
+                > *
+                    display: flex
+                    align-items: baseline
+
+                    > .type-name
+                        margin-right: 5px
+
+                    &.income
+                        color: $c-green
+                    &.expense
+                        color: $c-red
+                    + *
+                        margin-left: 20px
+
+
+    // -- balance by bills
+    > .bill-balance
+
+        padding-left: 20px
+        padding-right: 20px
+
+        transition-property: background, padding
+        transition-duration: 250ms
+
+        &.opened
+            background: $bg-white
+            border-radius: $bdr-radius
+            padding: 20px
+
+            > footer a .icon-left
+                transform: rotate(0deg)
+
+
+        // hide bills button
+        > footer
+            a
+                padding: 5px
+                display: block
+                text-align: center
+                color: $light-text
+                text-decoration: none
+                > .icon-left
+                    transition: transform 250ms
+                    transform: rotate(180deg)
+                &:hover
+                    background: $bg-grey
+
+
+        // Bill list
+        .bill-list
+            .bill-item
+                position: relative
+                display: flex
+                justify-content: flex-start
+                align-items: center
+                margin-bottom: 20px
+
+                // even
+                &:nth-child(even)
+                    padding-left: 20px
+
+                    // middle line
+                    &:before
+                        content: ''
+                        height: 30px
+                        width: 1px
+                        background: $c-grey-light
+                        position: absolute
+                        //top: 0
+                        left: 0
+
+                // odd
+                &:nth-child(odd)
+                    padding-right: 20px
+
+                // icon
+                .bill-icon
+                    height: 38px
+                    width: 38px
+                    background: $accent
+                    margin-right: 15px
+                    border-radius: 100%
+
+                .bill-sum
+                    right: 20px
+                    position: absolute

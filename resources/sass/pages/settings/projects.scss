@@ -1,0 +1,133 @@
+section.projects{
+
+    > .nothing{
+        color: $light-text;
+    }
+
+    > .projects__list{
+        > .project{
+            display: flex;
+            align-items: center;
+
+            // Spacing
+            > * + *{
+                margin-left: 20px;
+            }
+            + .project{
+                margin-top: 15px;
+            }
+
+            // table imitation
+            > div:first-child{
+                width: 20px;
+            }
+
+            > div.project__name{
+                width: 250px;
+            }
+
+
+            // Styles
+            .project__name{
+                padding: 7px 15px;
+                background: #fff;
+                border: 1px solid $c-grey-light;
+                border-radius: 5px;
+                position: relative;
+                cursor: default;
+
+                > span.archived{
+                    position: absolute;
+                    top: 3px;
+                    right: 5px;
+                    font-size: 10px;
+                    color: $light-text;
+                }
+            }
+
+            .project__actions{
+                > * + *{
+                    margin-left: 10px;
+                }
+
+                > a{
+                    text-decoration: none;
+                }
+
+                > a.remove-action{
+                    color: $c-red
+                }
+            }
+
+        }
+    }
+
+
+    // Projects top
+    .projects__top{
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    // Project show types
+    .projects__types{
+
+        > .projects__type{
+            display: inline-block;
+            padding-bottom: 3px;
+            text-decoration: none;
+
+            border-bottom: 3px solid transparent;
+            transition: border-color $base-transition-duration;
+
+            + .projects__type{
+                margin-left: 15px;
+            }
+
+            &.selected{
+                border-bottom-color: $c-blue
+            }
+        }
+    }
+
+    // project search
+    .projects__search{
+        display: flex;
+        align-items: center;
+
+        > input{
+            padding: 7px 15px;
+            border-radius: 5px;
+            border: 1px solid $c-grey-light;
+        }
+
+        > .prepend{
+
+            padding: 7px 7px 7px 15px;
+            border-style: solid;
+            border-color: $c-grey-light;
+            border-top-width: 1px;
+            border-left-width: 1px;
+            border-bottom-width: 1px;
+            border-right-width: 0;
+
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+
+            color: $light-text;
+
+            + input{
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                border-left: none;
+                padding-left: 5px;
+
+                &, &:active, &:focus{
+                    outline: none;
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+}
