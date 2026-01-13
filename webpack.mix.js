@@ -26,8 +26,8 @@ mix // >>
     .js('resources/js/app.js', 'public/js')
 
     // [authorize module]
-    // .js('resources/js/app-auth.js', 'public/js')
-    // .sass('resources/sass/auth/page.scss', 'public/css/auth.css')
+    .js('resources/js/app-auth.js', 'public/js')
+    .sass('resources/sass/auth/page.scss', 'public/css/auth.css')
 
 
     // Enable vue-loader with global sass variables
