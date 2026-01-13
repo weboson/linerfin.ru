@@ -4,104 +4,142 @@ namespace App\Http\Controllers;
 
 use App\Http\Abstraction\AccountAbstract;
 use App\Models\Bill;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use mikehaertl\wkhtmlto\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class OutsideController extends AccountAbstract
 {
-
     protected $middlewareAuthorize = false;
 
+    /**
+     * Вспомогательный метод для получения Base64
+     */
+    private function getBase64Image($attachment)
+    {
+        if (!$attachment) {
+            return null;
+        }
+
+        // Пробуем разные варианты путей
+        $paths = [
+            storage_path("app/public/attachments/{$attachment->uuid}"), // Стандартный storage
+            storage_path("app/attachments/{$attachment->uuid}"),        // Если нет public
+            public_path("ui/attachments/{$attachment->uuid}"),          // Если они в public/ui
+        ];
+
+        foreach ($paths as $fullPath) {
+            if (file_exists($fullPath)) {
+                $file = file_get_contents($fullPath);
+                $type = mime_content_type($fullPath);
+                return 'data:' . $type . ';base64,' . base64_encode($file);
+            }
+        }
+
+        // Если ничего не нашли, попробуем через Storage (на случай S3 или других драйверов)
+        if (isset($attachment->path) && Storage::exists($attachment->path)) {
+            $file = Storage::get($attachment->path);
+            $type = Storage::mimeType($attachment->path);
+            return 'data:' . $type . ';base64,' . base64_encode($file);
+        }
+
+        return null;
+    }
 
     /**
-     * Show bill outside
-     * Посмотреть счёт снаружи
-     * > ROUTE[link]
-     * > GET[private-key]
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * МЕТОД ДЛЯ ПРОСМОТРА (Кнопка "Печать")
      */
-    public function billView(Request $request){
+    public function billView(Request $request)
+    {
         $link = $request->route('link');
-        $bill = Bill::whereLink($link)->first();
+        $bill = Bill::with([
+            'account',
+            'counterparty',
+            'positions.nds_type',
+            'stamp_attachment',
+            'signature_list_with_attachments'
+        ])->whereLink($link)->first();
 
-        // If bill not exists
-        if(!$bill)
-            return response('', 404);
+        if (!$bill) return response('', 404);
 
-        if($bill->access === 'account'){
+        // Проверка доступа (если нужно)
+        if ($bill->access === 'account') {
             $private_key = $request->input('private-key');
-
-            if(!$private_key || $bill->private_key !== $private_key){
+            if (!$private_key || $bill->private_key !== $private_key) {
                 $this->authorize_account();
-                if($bill->account_id !== $this->account_id)
+                if ($bill->account_id !== $this->account_id)
                     return response('', 403);
+            }
+        }
+
+        // Подготавливаем картинки в Base64 для отображения
+        $bill->stamp_base64 = $this->getBase64Image($bill->stamp_attachment);
+
+        if ($bill->signature_list_with_attachments) {
+            foreach ($bill->signature_list_with_attachments as $sig) {
+                if (isset($sig->signature_attachment)) {
+                    $sig->signature_base64 = $this->getBase64Image($sig->signature_attachment);
+                }
             }
         }
 
         $subdomain = $bill->account->subdomain;
 
+        // Возвращаем просто вьюху в браузер
         return view('account.bill-pdf', compact('bill', 'request', 'subdomain'));
     }
 
-
-
-
-    // Bill download
-    public function billDownload(Request $request){
-
+    /**
+     * МЕТОД ДЛЯ СКАЧИВАНИЯ (Кнопка "Скачать")
+     */
+    public function billDownload(Request $request)
+    {
         $link = $request->route('link');
-        $bill = Bill::whereLink($link)->first();
+        $bill = Bill::with([
+            'account',
+            'counterparty',
+            'positions.nds_type',
+            'stamp_attachment',
+            'signature_list_with_attachments'
+        ])->whereLink($link)->first();
 
-        // If bill not exists
-        if(!$bill)
-            return response('', 404);
+        if (!$bill) return response('', 404);
 
-        // PDF file name
-        $filename = [];
-        if($bill->num)
-            $filename[] = "Счёт №".$bill->num;
-        if($bill->counterparty)
-            $filename[] = $bill->counterparty->name;
-        if($bill->issued_at)
-            $filename[] = '- от ' . $bill->issued_at->format('d-m-Y H-i');
-
-        if($bill->access === 'account'){
+        if ($bill->access === 'account') {
             $this->authorize_account();
-            if($bill->account_id !== $this->account_id)
+            if ($bill->account_id !== $this->account_id)
                 return response('', 403);
-
-            $private_key = $bill->private_key;
         }
 
-        // Prepare link to PDF
-        $viewLink = (!empty($_SERVER['HTTPS']) ? 'https://' : 'http://')
-            . config('app.domain')
-            . "/bill-$link";
+        // Подготовка Base64
+        $bill->stamp_base64 = $this->getBase64Image($bill->stamp_attachment);
 
-        // Get params
-        $query = [];
-        if(!empty($private_key))
-            $query['private-key'] = $private_key;
-        $query['hide-actions'] = '1';
-        $query['download'] = '1';
+        if ($bill->signature_list_with_attachments) {
+            foreach ($bill->signature_list_with_attachments as $sig) {
+                if (isset($sig->signature_attachment)) {
+                    $sig->signature_base64 = $this->getBase64Image($sig->signature_attachment);
+                }
+            }
+        }
 
-        $viewLink .= '?'.http_build_query($query);
+        $subdomain = $bill->account->subdomain;
 
+        // Рендерим HTML для PDF
+        $html = view('account.bill-pdf', [
+            'bill' => $bill,
+            'subdomain' => $subdomain,
+            'isPdf' => true,
+        ])->render();
 
-        // Get PDF
-        $pdf = new Pdf($viewLink);
-        $filename = count($filename) ? implode(' ', $filename) : "Счет ".date('d-m-Y');
+        $pdf = new Pdf($html);
 
-        // for large name
-        if(mb_strlen($filename) > 70)
-            $filename = "Счет ".date('d-m-Y');
+        $filename = "Счет №" . ($bill->num ?? date('d-m-Y'));
+        if ($bill->counterparty) $filename .= " " . $bill->counterparty->name;
+        if (mb_strlen($filename) > 70) $filename = "Счет " . date('d-m-Y');
 
-        if(!$pdf->send($filename . '.pdf'))
-            return $pdf->getError();
-
+        if (!$pdf->send($filename . '.pdf')) {
+            return response($pdf->getError(), 500);
+        }
 
         return '';
     }
