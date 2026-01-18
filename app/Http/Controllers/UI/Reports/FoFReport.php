@@ -63,6 +63,7 @@ class FoFReport extends PLReport
         foreach($activityTypes as $activityType => $activityTitle){
 
             $categoryData = []; // by activity type
+            $processedItems = []; // Для отслеживания уже обработанных статей бюджета
 
             foreach(['income', 'expense'] as $operation_category){
                 /** @var BudgetItemType $budgetItemsTypes */
@@ -73,6 +74,17 @@ class FoFReport extends PLReport
                 $budgetItems = self::test1($budgetItems->toArray());
 
                 foreach($budgetItems as $budgetItem){ // compare data by budget items
+
+                    // Создаем уникальный ключ для статьи бюджета
+                    $itemKey = $budgetItem['id'] . '_' . $activityType;
+                    
+                    // Проверяем, не обрабатывали ли уже эту статью бюджета
+                    if(isset($processedItems[$itemKey])) {
+                        continue; // Пропускаем дубликат
+                    }
+                    
+                    // Помечаем статью как обработанную
+                    $processedItems[$itemKey] = true;
 
                     $dataByPeriods = [];
 
