@@ -1,32 +1,32 @@
-
 // Create the bill
-.bill-create-page{
+.bill-create-page {
 
-    .page-nav-switch{
+    .page-nav-switch {
         margin-left: -20px;
         margin-right: -20px;
         padding-bottom: 20px;
         margin-bottom: 20px;
         border-bottom: 1px solid $c-grey-light;
 
-        > a.switch-link{
+        >a.switch-link {
             width: 350px;
         }
     }
 
-    .first-step{
-        .btn.btn-link{
+    .first-step {
+        .btn.btn-link {
             font-size: 14px;
             text-decoration: none;
         }
     }
 
-    .bill-blank__right-side{
+    .bill-blank__right-side {
         border-left: 1px solid $bg-grey
     }
 
-    .bill-blank__logo, .company-stamp{
-        .dragdrop .dragdrop__choosing{
+    .bill-blank__logo,
+    .company-stamp {
+        .dragdrop .dragdrop__choosing {
             display: flex;
             min-height: 100px;
             justify-content: center;
@@ -36,35 +36,35 @@
 
 
 
-    .bill-blank__counterparty-comment{
+    .bill-blank__counterparty-comment {
         font-weight: 500;
     }
 
 
-    .positions-list{
-        .positions-table{
-            tbody td{
+    .positions-list {
+        .positions-table {
+            tbody td {
                 border: 1px solid $c-grey-light;
                 padding: 5px;
 
-                .form-control{
+                .form-control {
                     height: auto;
                     padding: 5px 10px;
                     border-color: transparent;
                 }
 
-                .input-autocomplete-wrapper .autocomplete{
+                .input-autocomplete-wrapper .autocomplete {
                     border-top: 1px solid;
                     border-color: $c-grey-light;
                     border-radius: 3px;
                 }
 
-                &.sum{
+                &.sum {
                     position: relative;
                 }
 
                 // remove btn
-                a.positions-list__remove-position{
+                a.positions-list__remove-position {
                     position: absolute;
                     display: inline-block;
                     right: -19px;
@@ -74,7 +74,7 @@
                     cursor: pointer;
                     text-decoration: none;
 
-                    &:hover{
+                    &:hover {
                         opacity: 1;
                     }
                 }
@@ -86,16 +86,19 @@
 
 
 // Bill's list page
-.bills-list-page{
-    .bills-list{
-        .cell{
-            &.bill-status{
+.bills-list-page {
+    .bills-list {
+        .cell {
+            &.bill-status {
                 width: 18%;
             }
-            &.counterparty{
+
+            &.counterparty {
                 width: 46%;
             }
-            &.sum, &.pay-before{
+
+            &.sum,
+            &.pay-before {
                 width: 16%;
             }
         }
@@ -104,10 +107,10 @@
 
 
 // Bill view
-.bill-view-page{
+.bill-view-page {
 
-    > .top-header{
-        header.title .bill-status{
+    >.top-header {
+        header.title .bill-status {
             display: inline-block;
             font-size: 16px;
             font-weight: normal;
@@ -117,10 +120,10 @@
     }
 
 
-    .bill-view{
+    .bill-view {
 
         // Bill header
-        &__header{
+        &__header {
             display: flex;
             justify-content: stretch;
             align-items: center;
@@ -133,11 +136,12 @@
             border-bottom: 1px solid $c-grey-light;
 
             // Header layout
-            > .left, > .right{
+            >.left,
+            >.right {
                 width: 50%;
             }
 
-            > .right{
+            >.right {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
@@ -145,17 +149,18 @@
 
 
             // Counterparty
-            .bill-counterparty{
+            .bill-counterparty {
                 font-size: 24px;
             }
 
             // Bill number and date of public
-            .bill-number, .bill-pay-date{
+            .bill-number,
+            .bill-pay-date {
                 color: $light-text;
             }
 
             // Bill sum
-            .bill-sum{
+            .bill-sum {
                 font-size: 24px;
             }
         }
@@ -164,76 +169,78 @@
 
 
         // Bill positions
-        table.bill-view__positions{
+        table.bill-view__positions {
             margin-bottom: 30px;
 
-            th{
+            th {
                 font-weight: normal;
                 color: $light-text;
                 border-top: none;
                 border-bottom: 1px solid $c-grey-light;
             }
 
-            th, td{
+            th,
+            td {
                 text-align: right;
 
-                &:nth-child(1), &:nth-child(2){
+                &:nth-child(1),
+                &:nth-child(2) {
                     text-align: left;
                 }
             }
 
-            td{
+            td {
                 border-bottom: none;
             }
 
-            tbody > tr + tr > td{
+            tbody>tr+tr>td {
                 border-top: 1px solid $bg-grey
             }
         }
 
 
         // Recipient details
-        .bill-view__recipient-details{
+        .bill-view__recipient-details {}
 
-        }
-
-        .bill-view__signature{
-            display: table;
-            //width: 100%;
+        .bill-view__signature {
+            display: flex;
+            width: 100%;
             margin-top: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 100px;
+            justify-content: space-between;
+            flex-direction: column;
 
-            .bill-signature{
+            .bill-signature {
                 display: table-row;
 
-                + * > *{
+                +*>* {
                     padding-top: 15px;
                 }
 
-                > *{
+                >* {
                     display: table-cell;
                     padding-right: 15px;
 
-                    + *{
+                    +* {
                         padding-left: 15px;
                     }
                 }
 
                 .bill-signature__position,
-                .bill-signature__full-name{
+                .bill-signature__full-name {
                     text-transform: capitalize;
                 }
 
-                .bill-signature__position{
+                .bill-signature__position {
                     color: $light-text;
                 }
 
-                .bill-signature__images{
+                .bill-signature__images {
                     border-bottom: 1px solid $text;
-                    width: 300px;
+                    width: 50%;
                     position: relative;
 
-                    > img{
+                    >img {
                         position: absolute;
                         width: auto;
                         height: auto;
@@ -241,13 +248,14 @@
                         left: 40%;
                         transform: translate(-50%, -50%);
 
-                        &.signature{
-                            height: 60px;
+                        &.signature {
+                            height: 80px;
                         }
 
-                        &.stamp{
-                            max-height: 150px;
-                            left: 60%;
+                        &.stamp {
+                            max-height: 200px;
+                            left: 70%;
+                            top: 133px;
                         }
                     }
                 }
@@ -259,47 +267,47 @@
 
 
 // total styles
-.bill-namespace{
+.bill-namespace {
 
 
     // templates
-    .bill__templates{
-        &.opened{
+    .bill__templates {
+        &.opened {
             background: $bg-white;
             border-radius: $bdr-radius;
             padding: 20px;
 
-            > footer a .icon-left{
+            >footer a .icon-left {
                 transform: rotate(0deg)
             }
         }
 
-        .templates__list{
+        .templates__list {
             display: flex;
             flex-wrap: wrap;
 
-            > header{
+            >header {
                 width: 100%;
             }
 
-            .template{
+            .template {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 padding: 5px;
                 position: relative;
 
-                > .dropdown{
+                >.dropdown {
                     position: absolute;
                     right: 0;
                     top: 0;
 
-                    > .btn{
+                    >.btn {
                         padding: 2px;
                     }
                 }
 
-                &__preview{
+                &__preview {
                     width: 60px;
                     height: 60px;
                     margin-bottom: 7px;
@@ -313,14 +321,14 @@
                     border-radius: 60px;
                 }
 
-                &:hover{
+                &:hover {
                     cursor: pointer;
                     background-color: $bg-blue;
                 }
             }
         }
 
-        > footer a {
+        >footer a {
 
             padding: 5px;
             display: block;
@@ -328,31 +336,55 @@
             color: $light-text;
             text-decoration: none;
 
-            > .icon-left{
+            >.icon-left {
                 transition: transform 250ms;
                 transform: rotate(180deg);
             }
 
-            &:hover{ background: $bg-grey }
+            &:hover {
+                background: $bg-grey
+            }
         }
     }
 
 
     // Bill status
-    .bill-status{
-        &.template{ color: $warning }
-        &.paid, &.realized-paid, &.realized{ color: $c-green }
-        &.draft, &.rejected{ color: $light-text }
-        &.sent, &.issued{ color: $c-blue }
-        &.expired{ color: $c-red }
+    .bill-status {
+        &.template {
+            color: $warning
+        }
 
-        button.dropdown-toggle{
+        &.paid,
+        &.realized-paid,
+        &.realized {
+            color: $c-green
+        }
+
+        &.draft,
+        &.rejected {
+            color: $light-text
+        }
+
+        &.sent,
+        &.issued {
+            color: $c-blue
+        }
+
+        &.expired {
+            color: $c-red
+        }
+
+        button.dropdown-toggle {
             color: inherit
         }
     }
-    button.bill-status{
+
+    button.bill-status {
         font-weight: normal;
-        &, &:focus, &:hover{
+
+        &,
+        &:focus,
+        &:hover {
             outline: none;
             box-shadow: none;
         }
@@ -360,31 +392,31 @@
 
 
     // Bill total sum
-    .bill-view__sum{
+    .bill-view__sum {
 
-        .bill-nds-sum{
+        .bill-nds-sum {
             margin-left: auto;
             margin-bottom: 10px;
             display: table;
 
-            &__item{
+            &__item {
                 display: table-row;
                 color: $light-text;
                 margin-bottom: 15px;
 
-                > *{
+                >* {
                     padding: 10px 0;
                     display: table-cell;
                     white-space: nowrap;
 
-                    &:nth-child(2){
+                    &:nth-child(2) {
                         padding-left: 20px;
                     }
                 }
 
                 // VAT name and amount
-                .b-dropdown{
-                    > button{
+                .b-dropdown {
+                    >button {
                         padding: 0;
                         color: inherit;
                         font-size: 16px;
@@ -392,15 +424,17 @@
                 }
 
                 // VAT dropdown styles
-                .b-dropdown{
-                    .bill__nds-name{
-                        > *{
+                .b-dropdown {
+                    .bill__nds-name {
+                        >* {
                             vertical-align: middle;
                         }
                     }
-                    ul[role=menu]{
+
+                    ul[role=menu] {
                         width: 250px;
-                        .b-dropdown-text{
+
+                        .b-dropdown-text {
                             width: 100%;
                             white-space: normal;
                             font-size: 14px;
@@ -410,27 +444,27 @@
                 }
 
 
-                .price-format{
+                .price-format {
                     color: $text;
 
-                    > .penny:after{
+                    >.penny:after {
                         content: '';
                     }
                 }
             }
         }
 
-        .bill-sum{
+        .bill-sum {
             display: flex;
             justify-content: flex-end;
             align-items: baseline;
 
-            > span{
+            >span {
                 font-size: 16px;
                 color: $light-text;
             }
 
-            > .price-format{
+            >.price-format {
                 font-size: 28px;
                 margin-left: 15px;
             }
