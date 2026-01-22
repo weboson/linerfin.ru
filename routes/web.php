@@ -86,6 +86,7 @@ Route::domain("{subdomain}.$domain")->middleware(['auth:sanctum'])
 
 // all to Vue Application
 Route::domain("{subdomain}.$domain")->middleware(['auth'])->group(function(){
+    Route::get('/ui/products/suggestions', [App\Http\Controllers\UI\Bill\BillController::class, 'productSuggestions']);
     Route::get('{any}', function (\Illuminate\Http\Request $request) {
         $subdomain = $request->route('subdomain');
         $user_id = \Illuminate\Support\Facades\Auth::id();

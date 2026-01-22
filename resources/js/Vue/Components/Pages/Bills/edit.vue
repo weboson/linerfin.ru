@@ -269,7 +269,14 @@
                             <tr v-for="(position, i) in positions">
                                 <td>{{ i + 1 }}</td>
                                 <td>
-                                    <input type="text" v-model="positions[i].name" class="form-control" @keyup="realTimeSaving">
+                                        <input-autocomplete 
+                                            v-model="positions[i].name" 
+                                            :options="productSuggestions" 
+                                            title-key="value" 
+                                            @keyup="realTimeSaving" 
+                                            disable-timeout 
+                                            placeholder=""
+                                        />
                                 </td>
                                 <td>
                                     <input type="text" v-model="positions[i].vendor_code" class="form-control" @keyup="realTimeSaving">
@@ -651,6 +658,7 @@ export default {
             // Bill's positions
             positions: [],
             units: [{value: 'шт'}, {value: 'кг'}, {value: 'час'}, {value: 'усл'}],
+            productSuggestions: [], //! Список уникальных названий для автодополнения
 
             // Bill's signature list
             signature: [],
@@ -1099,7 +1107,16 @@ export default {
             })
         },
 
-
+        loadProductSuggestions() {
+            this.axiosGET('/ui/products/suggestions')
+                .then(data => {
+                    // Преобразовать в формат для input-autocomplete (массив объектов с 'value')
+                    this.productSuggestions = data.suggestions.map(name => ({ value: name }));
+                })
+                .catch(() => {
+                    // Опционально: обработка ошибки, например, console.log('Не удалось загрузить предложения')
+                });
+        },
         // Add signature
         addSignature(){
             this.signature.push({
@@ -1376,6 +1393,9 @@ export default {
         // choose checking account if once
         if(this.checkingAccounts.length === 1)
             this.checking_account = this.checkingAccounts[0].id
+
+        // Загрузить предложения автокомплита в таблицу в ячейку "Товар или услуга"
+        this.loadProductSuggestions();
 
 
     }

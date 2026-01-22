@@ -1424,4 +1424,22 @@ class BillController extends AccountAbstract
 
         return true;
     }*/
+    
+    
+    /**
+     * Получить уникальные названия товаров/услуг для автодополнения
+     */
+    public function productSuggestions()
+    {
+        // Получить уникальные названия из позиций счетов текущего аккаунта
+        $suggestions = \App\Models\BillPosition::where('account_id', $this->account_id)
+            ->whereNotNull('name')
+            ->where('name', '!=', '') // Исключить пустые
+            ->distinct()
+            ->limit(10) // Ограничение до 10 элементов
+            ->pluck('name')
+            ->toArray();
+
+        return $this->success(['suggestions' => $suggestions]);
+    }
 }
