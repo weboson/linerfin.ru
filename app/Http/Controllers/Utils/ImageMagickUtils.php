@@ -3,11 +3,57 @@
 namespace App\Http\Controllers\Utils;
 
 /**
- * Утилиты для обработки изображений с использованием ImageMagick
+ * Утилиты для обработки изображений
  */
 class ImageMagickUtils
 {
     protected $pathToFile;
+    
+    /**
+     * Проверяем доступность ImageMagick
+     */
+    public static function isAvailable(): bool
+    {
+        static $available = null;
+        
+        if ($available === null) {
+            $available = false;
+            
+            // Проверяем существование реального бинарника
+            $realPath = self::getRealConvertPath();
+            if ($realPath && is_executable($realPath)) {
+                // Проверяем может ли текущий пользователь выполнить
+                $testCmd = escapeshellarg($realPath) . ' -version 2>&1';
+                $result = @shell_exec($testCmd);
+                
+                if ($result && strpos($result, 'ImageMagick') !== false) {
+                    $available = true;
+                }
+            }
+        }
+        
+        return $available;
+    }
+    
+    /**
+     * Получаем реальный путь к convert
+     */
+    private static function getRealConvertPath(): string
+    {
+        // Следуем по цепочке симлинков
+        $path = '/usr/bin/convert';
+        
+        while (is_link($path)) {
+            $link = readlink($path);
+            if ($link[0] !== '/') {
+                $path = dirname($path) . '/' . $link;
+            } else {
+                $path = $link;
+            }
+        }
+        
+        return $path;
+    }
 
     public static function image(string $pathToFile){
         $self = new static();
@@ -27,91 +73,75 @@ class ImageMagickUtils
      */
     public function removeBackground(
         string $outputPath,
-        ?array $backgroundColor = null,
-        ?int $fuzz = 25,
-        ?bool $useMultipleColors = true
+        ?int $fuzz = 25
     ){
-        $color = $backgroundColor ?: [255, 255, 255];
+        $realConvertPath = self::getRealConvertPath();
         
-        $inputExtension = strtolower(pathinfo($this->pathToFile, PATHINFO_EXTENSION));
-        $outputExtension = strtolower(pathinfo($outputPath, PATHINFO_EXTENSION));
+        if (!is_executable($realConvertPath)) {
+            throw new \Exception('ImageMagick не доступен для выполнения');
+        }
         
-        // Если выходной файл не PNG, меняем его на PNG
-        if ($outputExtension !== 'png') {
+        // Всегда сохраняем как PNG
+        if (!preg_match('/\.png$/i', $outputPath)) {
             $outputPath = preg_replace('/\.[^\.]+$/', '.png', $outputPath);
         }
         
-        // Для JPG/JPEG/BMP конвертируем в PNG
-        $inputFile = $this->pathToFile;
-        $isTempFile = false;
-        
-        if (in_array($inputExtension, ['jpg', 'jpeg', 'bmp'])) {
-            $tempFile = sys_get_temp_dir() . '/temp_' . uniqid() . '.png';
-            shell_exec("convert '{$inputFile}' '{$tempFile}'");
-            
-            if (!file_exists($tempFile)) {
-                throw new \Exception('Failed to convert image to PNG');
-            }
-            
-            $inputFile = $tempFile;
-            $isTempFile = true;
+        // Создаем директорию
+        $outputDir = dirname($outputPath);
+        if (!is_dir($outputDir)) {
+            @mkdir($outputDir, 0755, true);
         }
         
-        try {
-            // Основная команда удаления фона
-            $command = "convert '{$inputFile}' -fuzz {$fuzz}% ";
-            
-            if ($useMultipleColors) {
-                // Удаляем несколько оттенков
-                $colors = $this->getColorVariations($color);
-                foreach ($colors as $c) {
-                    $command .= "-transparent \"rgb({$c[0]},{$c[1]},{$c[2]})\" ";
-                }
-            } else {
-                $command .= "-transparent \"rgb({$color[0]},{$color[1]},{$color[2]})\" ";
-            }
-            
-            $command .= "'{$outputPath}'";
-            
-            shell_exec($command);
-            
-            if (!file_exists($outputPath)) {
-                throw new \Exception('Failed to create output file');
-            }
-            
-        } finally {
-            if ($isTempFile && file_exists($inputFile)) {
-                unlink($inputFile);
-            }
+        // Проверяем права на запись
+        if (!is_writable($outputDir)) {
+            // Пробуем изменить права
+            @chmod($outputDir, 0755);
+        }
+        
+        // Команда с реальным путем
+        $cmd = sprintf(
+            '%s %s -fuzz %d%% -transparent white %s 2>&1',
+            escapeshellarg($realConvertPath),
+            escapeshellarg($this->pathToFile),
+            $fuzz,
+            escapeshellarg($outputPath)
+        );
+        
+        $result = @shell_exec($cmd);
+        
+        if (!file_exists($outputPath)) {
+            // Пробуем альтернативный подход - через временный файл
+            $this->tryWithTempFile($realConvertPath, $outputPath, $fuzz);
+        }
+        
+        if (!file_exists($outputPath)) {
+            throw new \Exception('Не удалось обработать изображение. Возможно нет прав.');
         }
         
         return $this;
     }
     
-    private function getColorVariations(array $baseColor): array
+    /**
+     * Альтернативный метод через временный файл
+     */
+    private function tryWithTempFile($convertPath, $outputPath, $fuzz)
     {
-        $colors = [$baseColor];
+        // Создаем временный файл в /tmp (обычно доступен всем)
+        $tempOutput = '/tmp/' . basename($outputPath) . '_' . uniqid() . '.png';
         
-        // Добавляем похожие цвета (оттенки белого/серого)
-        $variations = [5, 10, 15, 20];
-        foreach ($variations as $v) {
-            $colors[] = [
-                min(255, $baseColor[0] + $v),
-                min(255, $baseColor[1] + $v),
-                min(255, $baseColor[2] + $v)
-            ];
-            $colors[] = [
-                max(0, $baseColor[0] - $v),
-                max(0, $baseColor[1] - $v),
-                max(0, $baseColor[2] - $v)
-            ];
+        $cmd = sprintf(
+            '%s %s -fuzz %d%% -transparent white %s 2>&1',
+            escapeshellarg($convertPath),
+            escapeshellarg($this->pathToFile),
+            $fuzz,
+            escapeshellarg($tempOutput)
+        );
+        
+        @shell_exec($cmd);
+        
+        if (file_exists($tempOutput)) {
+            // Копируем в нужное место
+            rename($tempOutput, $outputPath);
         }
-        
-        return array_unique($colors, SORT_REGULAR);
-    }
-    
-    // Для обратной совместимости
-    public function addTransparency(int $red, int $green, int $blue, string $pathToSave, int $fuzz = 9){
-        return $this->removeBackground($pathToSave, [$red, $green, $blue], $fuzz, false);
     }
 }
