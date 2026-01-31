@@ -1,33 +1,20 @@
 import utils from "../../../../mixins/utils";
 import axios from "../../../../mixins/axios";
 
-
-/*
- * @events
- *  input       < give attachment_id
- *  input-uuid  < give attachment_uuid
- *  upload      < ?
- */
-
-
 export default {
     mixins: [utils, axios],
 
-    // Properties
     props: {
+        value: {},
+        attachmentData: {},
 
-        value: {}, // attachment_id
-        attachmentData: {}, // attachment data
+        accept: { default: '*/*'},
 
-        accept: { default: '*/*'}, // input accept attribute
-
-        // Access options
         public: {
             type: Boolean,
             default: false
         },
         accountPublic: {
-            // public for this account
             type: Boolean,
             default: false
         },
@@ -37,46 +24,38 @@ export default {
             default: null
         },
 
-
-        // Allowed extensions
         extensions: {
             type: Array
         },
 
-
-        // Autoload options
         autoload: {
             type: Boolean,
             default: true
         },
 
-
-        // callback
         uploadHandler: Function,
         scope: {
             type: Object,
             default: null
         },
 
-        removeBackground: Boolean
+        removeBackground: {
+            type: Boolean,
+            default: true
+        }
     },
 
-
-    // Component data
     data(){
         return {
-            dragAndDropCapable: false, // поддержка Drag&Drop
+            dragAndDropCapable: false,
             file: null,
             attachment: {},
             previewImage: null,
-
             dragHover: false,
             uploading: false
         }
     },
 
-
-    // Getters
     computed: {
         fileName(){
             if(this.fileExist){
@@ -92,26 +71,25 @@ export default {
             if(Object.keys(this.attachment).length)
                 return true;
             return this.file && this.file instanceof File;
+        },
+        
+        isImageFile() {
+            if (!this.file) return false;
+            const imageTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/bmp', 'image/webp'];
+            return imageTypes.includes(this.file.type);
         }
     },
 
-
-
-    // Methods
     methods: {
-
-        // Load handler
         loadHandler(file){
             if(!file)
                 [file] = this.$refs.file.files;
 
-            // check file type
             if(!this.acceptFileType(file.type)){
                 this.errorNotify('Неверный тип файла');
                 return;
             }
 
-            // check file size
             if(this.maxSize && file.size > Number.parseInt(this.maxSize)){
                 this.errorNotify('Превышен максимальный размер файла');
                 return;
@@ -119,22 +97,18 @@ export default {
 
             this.file = file;
 
-            // create preview
             if(this.file){
                 this.previewImage = URL.createObjectURL(this.file);
             }
 
-            // Autoload disabled
             if(!this.autoload)
                 return;
 
-            // Autoload enabled
-            if(this.uploadHandler) // custom handler
+            if(this.uploadHandler)
                 this.uploadHandler(this.file, this.scope);
             else
                 this.uploadFile();
         },
-
 
         acceptFileType(type){
             if(!this.accept) return true;
@@ -142,10 +116,7 @@ export default {
             return ~accept.indexOf(type);
         },
 
-
-        // Upload file (default)
         uploadFile(){
-
             if(this.uploading){
                 console.log('already uploading');
                 return;
@@ -159,25 +130,38 @@ export default {
             let formData = new FormData;
             formData.set('attachment', this.file);
 
-            const requestOptions = { headers: { 'Content-Type': 'multipart/form-data' } };
+            const requestOptions = { 
+                headers: { 'Content-Type': 'multipart/form-data' } 
+            };
 
             let url = '/ui/attachments';
-            if(this.removeBackground) url += '?remove-background';
+            
+            // Добавляем параметр ТОЛЬКО если removeBackground = true
+            if (this.removeBackground && this.isImageFile) {
+                url += '?remove-background=true';
+            }
+            
             this.uploading = true;
-            this.axiosPOST(url, formData, requestOptions).then(data => {
-                if(data.attachment_id){
-                    this.$emit('input', data.attachment_id);
-                    this.$emit('input-uuid', data.uuid);
-                }
+            
+            this.axiosPOST(url, formData, requestOptions)
+                .then(data => {
+                    if(data.attachment_id){
+                        this.$emit('input', data.attachment_id);
+                        this.$emit('input-uuid', data.uuid);
+                    }
 
-                this.$emit('upload', data?.attachment);
-            }).finally(() => { this.uploading = false; });
+                    this.$emit('upload', data?.attachment);
+                })
+                .catch(error => {
+                    console.error('Upload error:', error);
+                    this.errorNotify('Ошибка при загрузке файла');
+                })
+                .finally(() => { 
+                    this.uploading = false; 
+                });
         },
 
-
-        // Check drag&drop support
         determineDragAndDropCapable(){
-
             let div = document.createElement('div'),
                 exist = ( ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div) )
                     && 'FormData' in window
@@ -188,36 +172,23 @@ export default {
             return exist;
         },
 
-
-        // Reset file
         resetFile(){
             if(this.attachment?.uuid){
-                /*if(!confirm('Вы действительно хотите удалить файл?'))
-                    return;
-
-                this.axiosPOST(`/ui/attachments/${this.attachment.uuid}/remove`).then(data => {
-                    this.attachment = {};
-                    this.$emit('input', null)
-                });*/
                 this.attachment = {};
                 this.$emit('input', null);
             }
 
             this.$refs.file.value = '';
             this.file = null;
+            this.previewImage = null;
         },
 
-
-        // dragleave
         onDragleave(e){
             if(e.target === this.$refs.dragwrapper)
                 this.dragHover = false;
         }
-
     },
 
-
-    // Watchers
     watch: {
         attachment: function(){
             if(this.attachment?.uuid)
@@ -232,21 +203,14 @@ export default {
         }
     },
 
-
-
-    // Callback on mount
     mounted(){
-
-        // Load attachment preview
         if(this.attachmentData){
-            this.attachment = this.attachmentData;
+            this.attachment = $this.attachmentData;
         }
 
-        // Drag&Drop functional
         this.dragAndDropCapable = this.determineDragAndDropCapable();
         if(!this.dragAndDropCapable) return;
 
-        // Bind events of drag&drop
         ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach(function(evt){
             this.$refs.inputFileWrapper.addEventListener(evt, function(e){
                 e.preventDefault();
@@ -254,11 +218,8 @@ export default {
             }.bind(this), false);
         }.bind(this));
 
-
-        // Event of drop
         this.$refs.inputFileWrapper.addEventListener('drop', function(e){
             this.loadHandler(e.dataTransfer.files[0]);
         }.bind(this));
-
     }
 }
