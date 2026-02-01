@@ -39,8 +39,9 @@ RUN apt-get update && apt-get install -y \
     libmagickwand-dev \
     libmagickcore-dev
 
-# Очищаем кэш
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Очищаем кэш (НО не удаляем списки пакетов полностью)
+RUN apt-get clean
+# RUN apt-get clean && rm -rf /var/lib/apt/lists/* - удаляет пакеты
 
 # Устанавливаем расширения PHP
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
@@ -71,6 +72,5 @@ USER www
 #RUN chmod -R 775 /var/www/linercrm.ru/*
 #RUN chmod -R 775 /var/www/lirefin.ru/*
 
-# В контейнере открываем 9000 порт и запускаем сервер php-fpm
 EXPOSE 9000
 CMD ["php-fpm"]
