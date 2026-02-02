@@ -81,8 +81,8 @@
         .bill-signature__images img.stamp {
             position: absolute;
             height: 140px;
-            bottom: -30px;
-            left: 40%;
+            bottom: -145px;
+            left: 50%;
             z-index: 1;
         }
 
