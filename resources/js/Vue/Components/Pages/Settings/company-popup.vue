@@ -15,8 +15,8 @@
             </div>
             <div class="form-group">
                 <label>Тип организации</label>
-                <select-ui v-model="opf_type" el-class="form-control" class="w-100"
-                           :options="$store.state.OPFTypes" required/>
+                <select-ui v-model="opf_type" el-class="form-control" class="w-100" :options="$store.state.OPFTypes"
+                    required />
             </div>
             <div class="form-group">
                 <label>
@@ -79,6 +79,66 @@
                 <label>ФИО бухгалтера</label>
                 <input v-model="accountant_name" type="text" class="form-control">
             </div>
+
+
+            <!-- печать и подпись -->
+            <div class="form-wrapper">
+
+
+                <div class="form-group with-tip">
+                    <header class="text-secondary mb-1">
+                        Печать компании
+                    </header>
+                    <div class="position-relative">
+                        <input-file v-model="stampId" class="bg-white" accept="image/jpeg,image/png"
+                            :attachment-data="stampData" :extensions="['jpg', 'png', 'jpeg']" @input-uuid="saveStamp"
+                            key="0" />
+
+                        <div class="form-tip text-primary" v-b-tooltip.hover
+                            title="Печать компании будет автоматически подставляться">
+                            <b-icon-question-circle />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group with-tip">
+                    <header class="text-secondary mb-1">
+                        Подпись директора
+                    </header>
+                    <div class="position-relative">
+                        <input-file v-model="directorSignatureId" class="bg-white" accept="image/jpeg,image/png"
+                            :attachment-data="directorSignatureData" :extensions="['jpg', 'png', 'jpeg']"
+                            @input-uuid="saveDirectorSignature" key="1" />
+                        <div class="form-tip text-primary" v-b-tooltip.hover
+                            title="Подпись директора будет автоматически подставляться">
+                            <b-icon-question-circle />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group with-tip" v-if="accountantExists">
+                    <header class="text-secondary mt-2 mb-1">
+                        Подпись бухгалтера
+                    </header>
+                    <div class="position-relative">
+                        <input-file v-model="accountantSignatureId" class="bg-white" accept="image/jpeg,image/png"
+                            :attachment-data="accountantSignatureData" :extensions="['jpg', 'png', 'jpeg']"
+                            @input-uuid="saveAccountantSignature" key="2" />
+                        <div class="form-tip text-primary" v-b-tooltip.hover
+                            title="Вы можете загрузить логотип компании, который отобразиться в выставленных счетах">
+                            <b-icon-question-circle />
+                        </div>
+                    </div>
+                </div>
+
+
+                <small class="form-text text-muted">Рекомендуется изображение в формате PNG <br> размером не более
+                    300x700px</small>
+            </div>
+
+
         </div>
 
         <modal-buttons @save="save" @cancel="closePopup"></modal-buttons>
@@ -93,10 +153,10 @@ import utils from "../../../mixins/utils";
 export default {
     name: "company-popup",
     components: { ModalButtons },
-    mixins: [ axios, utils ],
+    mixins: [axios, utils],
     props: { data: Object },
 
-    data(){
+    data() {
         return {
             name: '',
             opf_type: null,
@@ -114,17 +174,17 @@ export default {
     },
 
     computed: {
-        domain(){
+        domain() {
             return APPDATA?.DOMAIN || 'linerfin.ru/';
         },
 
-        isEditing(){
+        isEditing() {
             return !!this.data?.id;
         }
     },
 
     methods: {
-        save(){
+        save() {
             let data = {
                 name: this.name,
                 opf_type: this.opf_type,
@@ -146,14 +206,14 @@ export default {
             });
         },
 
-        closePopup(){
-            if(confirm('Данные не сохранены. Закрыть?'))
+        closePopup() {
+            if (confirm('Данные не сохранены. Закрыть?'))
                 this.$emit('vuedals:close', null);
         },
     },
 
     created() {
-        if(this.data){
+        if (this.data) {
             let d = this.data;
             this.name = d?.name || '';
             this.opf_type = d?.organization_type || '';
