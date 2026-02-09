@@ -39,11 +39,11 @@ class FoFReport extends PLReport
         /*
          * $data structure:
          * [
-         *      {
-         *          type: 'header', // row type
-         *          data: [...] // data by periods
-         *      },
-         *      ...
+         * {
+         * type: 'header', // row type
+         * data: [...] // data by periods
+         * },
+         * ...
          * ]
          */
 
@@ -63,41 +63,42 @@ class FoFReport extends PLReport
         foreach($activityTypes as $activityType => $activityTitle){
 
             $categoryData = []; // by activity type
-            $processedItems = []; // Для отслеживания уже обработанных статей бюджета
 
             foreach(['income', 'expense'] as $operation_category){
                 /** @var BudgetItemType $budgetItemsTypes */
                 $budgetItemsTypes = BudgetItemType::where('type', $activityType)
                     ->where('category', $operation_category)->with('budget_items')->get();
 
-                $budgetItems = $budgetItemsTypes->pluck('budget_items');
-                $budgetItems = self::test1($budgetItems->toArray());
+                // ГРУППИРОВКА по имени и по категории (income/expense)
+                // Собираем группы budget_items по одинаковому имени и category
+                $budgetItemsGroups = $budgetItemsTypes->flatMap(function ($itemType) {
+                    return $itemType->budget_items;
+                })->groupBy(function ($item) {
+                    // ключ: имя + category (ту же категорию)
+                    return $item->name . '|' . $item->type_id;
+                })->map(function ($itemsGroup) {
+                    $first = $itemsGroup->first();
+                    return [
+                        'name' => $first->name,
+                        'category_id' => $first->type_id, // чтобы различать по категории
+                        'ids'  => $itemsGroup->pluck('id')->values()->toArray(),
+                    ];
+                })->values();
 
-                foreach($budgetItems as $budgetItem){ // compare data by budget items
-
-                    // Создаем уникальный ключ для статьи бюджета
-                    $itemKey = $budgetItem['id'] . '_' . $activityType;
-                    
-                    // Проверяем, не обрабатывали ли уже эту статью бюджета
-                    if(isset($processedItems[$itemKey])) {
-                        continue; // Пропускаем дубликат
-                    }
-                    
-                    // Помечаем статью как обработанную
-                    $processedItems[$itemKey] = true;
+                foreach ($budgetItemsGroups as $group){
+                    $groupName = $group['name'];
+                    $idsForGroup = $group['ids']; // массив id для группы с одним именем и категорией
 
                     $dataByPeriods = [];
 
                     foreach($periods as $period){ // compare data by periods
                         list($from, $to) = $period;
 
-                        $query = $this->getBuilder(Transaction::class, [
-                            'budget_item_id' => $budgetItem['id'],
-                            'type' => $operation_category,
-                        ]);
-
-                        $query->where('date', '>=', $from);
-                        $query->where('date', '<=', $to);
+                        // Формируем запрос по группе id и по категории
+                        $query = \App\Models\Transaction::whereIn('budget_item_id', $idsForGroup)
+                            ->where('type', $operation_category)
+                            ->where('date', '>=', $from)
+                            ->where('date', '<=', $to);
 
                         $sum = $query->sum('amount');
                         if($operation_category === 'expense')
@@ -108,13 +109,13 @@ class FoFReport extends PLReport
                     } // <- period cycle
 
                     $categoryData[] = [
-                        'name' => $budgetItem['name'],
+                        'name' => $groupName,
                         'data' => $dataByPeriods
                     ];
 
-                } // <- budget types cycle
+                } // <- budget items groups cycle
 
-            } // <- operation type
+            } // <- operation category cycle
 
             $categorySumByPeriods = $this->sumCategoryByPeriods($categoryData);
 
@@ -273,8 +274,8 @@ class FoFReport extends PLReport
         /*
          * one expense
          * [
-         *    name => {name}
-         *    data => [123234, 345642, 534543, ..]
+         * name => {name}
+         * data => [123234, 345642, 534543, ..]
          * ]
          */
 
