@@ -46,8 +46,11 @@ class DatabaseSeeder extends Seeder
         DB::table('nds_types')->insert([
             ['name' => 'Без НДС', 'percentage' => null],
             ['name' => '0%', 'percentage' => 0],
+            ['name' => '5%', 'percentage' => 5],
+            ['name' => '7%', 'percentage' => 7],
             ['name' => '10%', 'percentage' => 10],
-            ['name' => '20%', 'percentage' => 20]
+            ['name' => '20%', 'percentage' => 20],
+            ['name' => '22%', 'percentage' => 22],
         ]);
 
         // Create Taxations
