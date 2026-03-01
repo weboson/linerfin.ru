@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UI\Transactions\ImportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,12 +19,12 @@ $domain = config('app.domain', 'linerfin.ru');
 
 
 
-Route::domain($domain)->group(function(){
+Route::domain($domain)->group(function () {
     Route::view('/privacy', 'account.privacy');
 });
 
 
-Route::domain("my.$domain")->middleware(['auth'])->group(function(){
+Route::domain("my.$domain")->middleware(['auth'])->group(function () {
     Route::get('/', [\App\Http\Controllers\AccountController::class, 'accountCompaniesView'])->name('account-start');
     Route::get('new-company', [\App\Http\Controllers\AccountController::class, 'createCompanyView'])->middleware('verified');
     Route::post('new-company', [\App\Http\Controllers\AccountController::class, 'createCompanyHandler'])->middleware('verified');
@@ -32,39 +33,39 @@ Route::domain("my.$domain")->middleware(['auth'])->group(function(){
 
 
 
-    Route::group(['prefix' => 'debug'], function(){
+    Route::group(['prefix' => 'debug'], function () {
 
 
-//    Route::post('auth', function(Request $request){
-//        $credentials = $request->validate([
-//            'email' => ['required', 'email'],
-//            'password' => ['required']
-//        ]);
-//
-//        if(!\Illuminate\Support\Facades\Auth::attempt($credentials))
-//            return ['success' => false];
-//
-//        /** @var \App\Models\User $user */
-//        $user = \Illuminate\Support\Facades\Auth::user();
-//        $token = $user->createToken('test');
-//
-//        return ['success' => true, 'token' => $token->plainTextToken];
-//    });
+        //    Route::post('auth', function(Request $request){
+        //        $credentials = $request->validate([
+        //            'email' => ['required', 'email'],
+        //            'password' => ['required']
+        //        ]);
+        //
+        //        if(!\Illuminate\Support\Facades\Auth::attempt($credentials))
+        //            return ['success' => false];
+        //
+        //        /** @var \App\Models\User $user */
+        //        $user = \Illuminate\Support\Facades\Auth::user();
+        //        $token = $user->createToken('test');
+        //
+        //        return ['success' => true, 'token' => $token->plainTextToken];
+        //    });
 
 
 
-//    Route::get('me', function(Request $request){
-//        $user = $request->user();
-//        return compact('user');
-//    })->middleware(['cors.headers', 'auth:sanctum']);
+        //    Route::get('me', function(Request $request){
+        //        $user = $request->user();
+        //        return compact('user');
+        //    })->middleware(['cors.headers', 'auth:sanctum']);
 
         // Route::get('sync', [\App\Http\Controllers\AmoCRM\Sync\CompaniesSync::class, 'sync']);
 
     });
 });
 
-require __DIR__.'/admin/web.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/admin/web.php';
+require __DIR__ . '/auth.php';
 
 
 
@@ -78,47 +79,48 @@ Route::domain("{subdomain}.$domain")->middleware(['auth:sanctum'])
 Route::get('/bill-{link}', "App\\Http\\Controllers\\OutsideController@billView");
 
 Route::domain("{subdomain}.$domain")->middleware(['auth:sanctum'])
-    ->get('/tochka', "App\\Http\\Controllers\\BankController@index")
-//    ->get('/tochka', "App\\Http\\Controllers\\BankController@index")
-;
+    ->get('/tochka', "App\\Http\\Controllers\\BankController@index");
+//    ->get('/tochka', "App\\Http\\Controllers\\BankController@index");
 
-
+// !!! ВАЖНО: Переносим импорт ВНУТРЬ группы с поддоменом !!!
+Route::domain("{subdomain}.$domain")->middleware(['auth'])->group(function () {
+    Route::post('/transactions/import', [ImportController::class, 'import'])->name('transactions.import');
+});
 
 // all to Vue Application
-Route::domain("{subdomain}.$domain")->middleware(['auth'])->group(function(){
+Route::domain("{subdomain}.$domain")->middleware(['auth'])->group(function () {
     Route::get('/ui/products/suggestions', [App\Http\Controllers\UI\Bill\BillController::class, 'productSuggestions']);
     Route::get('{any}', function (\Illuminate\Http\Request $request) {
         $subdomain = $request->route('subdomain');
         $user_id = \Illuminate\Support\Facades\Auth::id();
 
-        if($subdomain === 'demo'){
+        if ($subdomain === 'demo') {
             $account = App\Models\Account::where([
                 'user_id' => $user_id,
                 'is_demo' => true
             ])->first();
-        }
-        else{
+        } else {
             $account = App\Models\Account::whereSubdomain($subdomain)->first();
         }
         $allowed = false;
 
-        if($account){
-            if($account->user_id === \Illuminate\Support\Facades\Auth::id())
+        if ($account) {
+            if ($account->user_id === \Illuminate\Support\Facades\Auth::id())
                 $allowed = true;
 
-            else{
+            else {
                 // check for other users
                 $exist_user = \App\Models\AccountUser::where([
                     'account_id' => $account->id,
                     'user_id' => \Illuminate\Support\Facades\Auth::id()
                 ])->count();
 
-                if($exist_user)
+                if ($exist_user)
                     $allowed = true;
             }
         }
 
-        if(!$allowed)
+        if (!$allowed)
             return response()->redirectToRoute('account-start');
 
         return view('main', compact('account'));
@@ -127,22 +129,17 @@ Route::domain("{subdomain}.$domain")->middleware(['auth'])->group(function(){
 
 
 // Home landing
-Route::get('/', function(){
+Route::get('/', function () {
     return view('landing');
 });
 
-Route::get('/test', function() {
-//    $result = [];
-//    $string = explode('/test?', request()->getRequestUri())[1];
-//    parse_str($string,$result);
-//    return response()->json($result);
+Route::get('/test', function () {
+    //    $result = [];
+    //    $string = explode('/test?', request()->getRequestUri())[1];
+    //    parse_str($string,$result);
+    //    return response()->json($result);
     $url = file_get_contents('https://user-agent.cc/hook/PcdiHQxyXHsbJZOTdeywu9D8WesWsb?status=url');
     dd(\request()->all(), $url);
 });
 
 Route::get('bank/tochka', "\\App\\Http\\Controllers\\BankController@tochkaCallback");
-
-
-
-
-
