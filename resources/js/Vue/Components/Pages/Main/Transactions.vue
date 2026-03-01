@@ -1,29 +1,22 @@
 <template>
-
-
     <div class="table-type-1 transaction-list">
-
-
         <header>
             <div class="income">
                 <span class="desc">
                     {{ incomeCount }} поступлений
                 </span>
-                <price-format-ui :amount="incomeSum" show-plus/>
+                <price-format-ui :amount="incomeSum" show-plus />
             </div>
             <div class="expense">
                 <span class="desc">
                     {{ expenseCount }} списаний
                 </span>
-                <price-format-ui :amount="expenseSum * -1" show-plus/>
+                <price-format-ui :amount="expenseSum * -1" show-plus />
             </div>
         </header>
 
-
         <!-- Transactions table -->
         <div class="table-type-1__table transaction-list__table loader-wrapper">
-
-
             <header :class="existSelect ? 'exists-selected' : ''">
                 <div class="cell select">
                     <b-form-checkbox v-model="allSelected" :indeterminate="isPartitionSelected" />
@@ -38,6 +31,10 @@
                     </div>
                     <div class="cell budget-item">
                         <span>Статья и описание</span>
+                    </div>
+                    <!-- Новая колонка "Назначение платежа" -->
+                    <div class="cell purpose">
+                        <span>Назначение платежа</span>
                     </div>
                     <div class="cell project">
                         <span>Проект</span>
@@ -63,17 +60,14 @@
                 </div>
             </transition>
 
-
             <!-- Transaction -->
             <div v-for="transaction in transactions" v-if="transactions.length"
-                 class="table-type-1__table-row transaction-item"
-                 :class="transaction.type">
+                class="table-type-1__table-row transaction-item" :class="transaction.type">
 
                 <div class="table-type-1__table-row-header">
-
                     <!-- Checkbox -->
                     <div class="cell select">
-                        <b-form-checkbox v-model="selectedTransactions" :key="transaction.id" :value="transaction.id"/>
+                        <b-form-checkbox v-model="selectedTransactions" :key="transaction.id" :value="transaction.id" />
                     </div>
 
                     <!-- Transaction Date -->
@@ -83,8 +77,9 @@
 
                     <!-- Amount -->
                     <div class="cell sum" @click.prevent="toggleTransactionDetails(transaction)">
-                        <price-format-ui :amount="transaction.type === 'expense' ? transaction.amount * -1 : transaction.amount"
-                                         :show-plus="transaction.type === 'income'"></price-format-ui>
+                        <price-format-ui
+                            :amount="transaction.type === 'expense' ? transaction.amount * -1 : transaction.amount"
+                            :show-plus="transaction.type === 'income'"></price-format-ui>
                     </div>
 
                     <!-- Budget item -->
@@ -95,6 +90,14 @@
                         <div class="desc" v-if="transaction.description">
                             {{ transaction.description }}
                         </div>
+                    </div>
+
+                    <!-- Purpose column (Назначение платежа) -->
+                    <div class="cell purpose" @click.prevent="toggleTransactionDetails(transaction)">
+                        <div class="purpose-text" v-if="transaction.purpose">
+                            {{ truncatePurpose(transaction.purpose) }}
+                        </div>
+                        <span v-else class="text-muted">—</span>
                     </div>
 
                     <!-- Project -->
@@ -116,14 +119,21 @@
 
                     <!-- Checking account -->
                     <div class="cell checking-account" @click.prevent="toggleTransactionDetails(transaction)">
-                        <div v-for="checkingAccount in getCheckingAccount(transaction)"  class="checking-account__item">
+                        <div v-for="checkingAccount in getCheckingAccount(transaction)" class="checking-account__item">
                             {{ checkingAccount.name }}
                         </div>
                     </div>
-
                 </div>
+
+                <!-- Transaction details (разворачиваемая часть) -->
                 <div class="table-type-1__table-row-content" v-if="showDetails === transaction.id">
                     <div>
+                        <!-- Показываем назначение платежа в деталях, если есть -->
+                        <template v-if="transaction.purpose">
+                            <p><strong>Назначение платежа</strong></p>
+                            <p class="purpose-detail">{{ transaction.purpose }}</p>
+                        </template>
+
                         <template v-if="transaction.counterparty">
                             <p><strong>Реквизиты контрагента</strong></p>
                             <table>
@@ -167,13 +177,11 @@
                             </span>
                             изменена
                         </p>
-
-
                     </div>
 
                     <footer>
                         <a href="#" @click.prevent="toggleTransactionDetails(transaction)">
-                            <b-icon-chevron-up class="icon-left"/>
+                            <b-icon-chevron-up class="icon-left" />
                             <span>Скрыть</span>
                         </a>
                     </footer>
@@ -186,12 +194,10 @@
         </div>
 
         <footer>
-
             <div class="pagination">
                 <template v-if="pages.length > 1">
-                    <a v-for="pageNum in pages" href="#" class="pageLink"
-                       v-on:click.prevent="choosePage(pageNum)"
-                       :class="pageNum.toString() === page.toString() ? 'current' : ''">
+                    <a v-for="pageNum in pages" href="#" class="pageLink" v-on:click.prevent="choosePage(pageNum)"
+                        :class="pageNum.toString() === page.toString() ? 'current' : ''">
                         {{ pageNum }}
                     </a>
                     <a v-if="morePages" href="#" class="pageLink show-more">Еще {{ morePages }}</a>
@@ -201,16 +207,13 @@
                 <span>
                     Количество записей
                 </span>
-                <select-ui :options="per_page_counts" v-model="perPageCount" :required="true"
-                           @input="choosePPC"/>
+                <select-ui :options="per_page_counts" v-model="perPageCount" :required="true" @input="choosePPC" />
             </div>
-
         </footer>
     </div>
 </template>
 
 <script>
-
 import utils from "../../../mixins/utils";
 import paginator from "../../../mixins/paginator";
 import { EventBus } from "../../../index";
@@ -222,7 +225,7 @@ import TransferModal from "./modals/CreateTransfer";
 
 export default {
     name: "Transactions",
-    mixins: [ paginator, utils, axios ],
+    mixins: [paginator, utils, axios],
 
     props: {
         filters: {
@@ -230,7 +233,7 @@ export default {
         }
     },
 
-    data(){
+    data() {
         return {
             transactions: [],
             allSelected: false,
@@ -250,75 +253,73 @@ export default {
     },
 
     methods: {
+        // метод для обрезки длинного "назначения платежа"
+        truncatePurpose(purpose) {
+            if (!purpose) return '';
+            if (purpose.length > 50) {
+                return purpose.substring(0, 60) + '...';
+            }
+            return purpose;
+        },
 
-        getTransactions(){
-
-            this.loader = true; // enable loader
+        getTransactions() {
+            this.loader = true;
 
             let params = {
                 page: this.page,
                 ppc: this.perPageCount
             };
 
-            if(this.filters)
+            if (this.filters)
                 params.filters = Object.assign({}, this.filters);
 
-
-            // convert Date type
             let period = this.filters?.filterPeriod;
-            if(period && period.length > 1){
+            if (period && period.length > 1) {
                 params.filters.filterPeriod = [
-                    period[0] ? period[0].getTime()/1000 : null,
-                    period[1] ? period[1].getTime()/1000 : null,
+                    period[0] ? period[0].getTime() / 1000 : null,
+                    period[1] ? period[1].getTime() / 1000 : null,
                 ];
             }
 
-            console.info('params', {params});
             params = this.queryString(params);
-            console.info('queryString',{queryString: params});
 
             this.axiosGET('/ui/transactions?' + params).then(response => {
-                this.loader = false; // dis loader
+                this.loader = false;
 
                 this.transactions = response.transactions || [];
                 this.lastPage = Number.parseInt(response.last_page || 1);
 
-                // Save counters
                 this.incomeCount = response.income_count || 0;
                 this.incomeSum = response.income_sum || 0;
                 this.expenseCount = response.expense_count || 0;
                 this.expenseSum = response.expense_sum || 0;
 
-                // Emit month balance
                 EventBus.$emit('updateMonthBalance', {
                     income: this.incomeSum,
                     expense: this.expenseSum
-                })
-            })
+                });
+            });
         },
 
-        editTransaction(){
-
-            if(!this.existSelect)
-                return;
+        editTransaction() {
+            if (!this.existSelect) return;
 
             let transaction_id = this.selectedTransactions.shift();
-            let transaction = this.transactions.find((transaction => transaction.id === transaction_id));
+            let transaction = this.transactions.find(t => t.id === transaction_id);
 
-            if(!transaction) return;
+            if (!transaction) return;
 
             let handlerComponent;
-            if(transaction.type === 'expense')
+            if (transaction.type === 'expense')
                 handlerComponent = ExpenseModal;
-            else if( transaction.type === 'income')
+            else if (transaction.type === 'income')
                 handlerComponent = IncomeModal;
-            else if( transaction.type === 'transfer')
+            else if (transaction.type === 'transfer')
                 handlerComponent = TransferModal;
             else {
                 this.errorNotify('Неверный тип операции', "Редактирование операции");
                 return;
             }
-
 
             this.$emit('vuedals:new', {
                 name: 'right-modal',
@@ -326,119 +327,112 @@ export default {
                 escapable: true,
                 component: handlerComponent,
                 props: { data: transaction },
-
-                onClose: (data) => {
-                    //
-                },
-
-                onDismiss() {
-                    //
-                }
+                onClose: () => { },
+                onDismiss: () => { }
             });
         },
 
-        choosePage(page){
+        choosePage(page) {
             this.page = page;
             this.getTransactions();
         },
 
-        choosePPC(){
+        choosePPC() {
             this.getTransactions();
         },
 
-        // Show transaction details
-        toggleTransactionDetails(transaction){
+        toggleTransactionDetails(transaction) {
             let id = transaction.id;
             this.showDetails = this.showDetails === id ? null : id;
         },
 
-
-
-        // Get checking account from transaction object
-        getCheckingAccount(transaction){
-            switch (transaction.type){
+        getCheckingAccount(transaction) {
+            switch (transaction.type) {
                 case 'income':
-                    if(transaction.to_checking_account)
+                    if (transaction.to_checking_account)
                         return [transaction.to_checking_account];
                     break;
-
                 case 'expense':
-                    if(transaction.from_checking_account)
+                    if (transaction.from_checking_account)
                         return [transaction.from_checking_account];
                     break;
-
                 case 'transfer':
                     let ca = [];
-                    if(transaction.from_checking_account)
+                    if (transaction.from_checking_account)
                         ca.push(transaction.from_checking_account);
-                    if(transaction.to_checking_account)
+                    if (transaction.to_checking_account)
                         ca.push(transaction.to_checking_account);
-
                     return ca;
             }
-
             return [];
         }
-
-
     },
 
-
-    // Watchers
     watch: {
-
-
-        allSelected: function(){
-            if(this.allSelected){
-                this.selectedTransactions = [];
-                for(let option of this.transactions){
-                    this.selectedTransactions.push(option.id);
-                }
-            }
-            else{
+        allSelected: function () {
+            if (this.allSelected) {
+                this.selectedTransactions = this.transactions.map(t => t.id);
+            } else {
                 this.selectedTransactions = [];
             }
         },
 
-
-        selectedTransactions: function(){
-            if(this.isAllSelected)
+        selectedTransactions: function () {
+            if (this.isAllSelected)
                 this.allSelected = true;
-            else if(!this.selectedTransactions || !this.selectedTransactions.length)
+            else if (!this.selectedTransactions || !this.selectedTransactions.length)
                 this.allSelected = false;
         }
     },
 
-
     computed: {
-
-        // If all selected
-        isAllSelected(){
-            if(this.selectedTransactions.length === this.transactions.length)
-                return true;
-            return false;
+        isAllSelected() {
+            return this.selectedTransactions.length === this.transactions.length;
         },
 
-        // If partition selected
-        isPartitionSelected(){
-            if(this.selectedTransactions.length && !this.isAllSelected)
-                return true;
-            return false;
+        isPartitionSelected() {
+            return !!(this.selectedTransactions.length && !this.isAllSelected);
         },
 
-        // If select exists
-        existSelect(){
+        existSelect() {
             return !!this.selectedTransactions.length;
         }
     },
 
-
-
-    created(){
-        // this.getTransactions();
+    created() {
         EventBus.$on('transactions:update', () => {
             this.getTransactions();
-        })
+        });
+    },
+
+    beforeDestroy() {
+        EventBus.$off('transactions:update');
     }
 }
 </script>
+
+<style scoped>
+/* Стили для колонки "Назначение платежа" - только самое необходимое */
+/* остальные стили в resources/sass/pages/main-page/transactions.sass */
+.cell.purpose {
+    width: calc(32% - 135px);
+}
+
+.purpose-text {
+    color: #495057;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.purpose-detail {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+    margin: 10px 0 15px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.95rem;
+}
+</style>
