@@ -21,6 +21,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.6",
         "lee-to/php-tochka-api-v2-sdk": "master",
+        "maatwebsite/excel": "3.1.66",
         "mikehaertl/phpwkhtmltopdf": "^2.5",
         "sentry/sentry-laravel": "^3.8",
         "zelenin/smsru": "~5"
