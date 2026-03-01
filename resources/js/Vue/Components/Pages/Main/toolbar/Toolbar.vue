@@ -17,6 +17,10 @@
                     <b-icon-dash class="icon-left"></b-icon-dash>
                     <span>Расход</span>
                 </a>
+                <a href="#" class="btn btn-outline-secondary" @click.prevent="importBankStatement">
+                    <b-icon-download class="icon-left"></b-icon-download>
+                    <span>Загрузить выписку из банка</span>
+                </a>
             </div>
             <div class="right">
                 <a href="#" class="btn btn-outline-secondary" @click.prevent="plug">
@@ -180,8 +184,6 @@ export default {
         }
     },
 
-
-
     computed: {
 
         period(){
@@ -219,8 +221,6 @@ export default {
             return this.isPeriod('year');
         }
     },
-
-
 
     methods: {
 
@@ -339,9 +339,26 @@ export default {
 
         plug(){
             alert('Раздел в разработке');
+        },
+
+        // Добавьте этот метод ВНУТРИ объекта methods
+        importBankStatement() {
+            this.$emit('vuedals:new', {
+                name: 'right-modal',
+                dismissable: false,
+                escapable: true,
+                component: () => import('../modals/ImportBankStatement.vue'),
+                
+                onClose: (data) => {
+                    console.log('Модальное окно закрыто');
+                },
+                
+                onDismiss() {
+                    console.log('Пользователь закрыл модальное окно');
+                }
+            });
         }
     },
-
 
     created(){
         // get current month
