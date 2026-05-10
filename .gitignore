@@ -13,5 +13,5 @@ npm-debug.log
 yarn-error.log
 php-error.log
 .idea
-composer.lock
+# composer.lock
 package-lock.json

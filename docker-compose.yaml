@@ -15,7 +15,8 @@ services:
       DB_HOST: db
       DB_PORT: 3306
     env_file:
-      - .env.dev
+      # - .env.dev
+      - .env.production
     depends_on:
       - db
       - redis
